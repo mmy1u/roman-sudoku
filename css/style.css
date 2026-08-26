@@ -52,3 +52,29 @@ h1 {
 .selected {
     background-color: #ffe9a8;
 }
+#numberPad {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 320px;
+}
+
+.num-btn {
+    width: 40px;
+    height: 40px;
+    background-color: #e94560;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.num-btn:hover {
+    background-color: #ff6b81;
+}
