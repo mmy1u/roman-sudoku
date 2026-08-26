@@ -81,3 +81,10 @@ h1 {
 .error {
     color: #ff0000 !important;
 }
+#winMessage {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #4caf50;
+    display: none;
+}
