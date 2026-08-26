@@ -110,3 +110,23 @@ h1 {
     font-weight: bold;
     color: #ffffff;
 }
+#difficultyButtons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.diff-btn {
+    padding: 8px 16px;
+    background-color: #0f3460;
+    color: #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.diff-btn.active {
+    background-color: #e94560;
+}
