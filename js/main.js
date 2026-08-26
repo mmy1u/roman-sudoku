@@ -156,7 +156,8 @@ function startNewGame() {
     sudokuGrid = createEmptyGrid();
     fillGrid(sudokuGrid);
 
-    puzzleGrid = createPuzzle(sudokuGrid, 40);
+    const cellsToRemove = difficultyLevels[currentDifficulty];
+    puzzleGrid = createPuzzle(sudokuGrid, cellsToRemove);
 
     selectedCell = null;
     errorCount = 0;
@@ -172,6 +173,14 @@ const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 const board = document.getElementById("board");
 const numberPad = document.getElementById("numberPad");
 
+const difficultyLevels = {
+    easy: 30,
+    medium: 40,
+    hard: 50,
+    expert: 58
+};
+
+let currentDifficulty = "medium";
 let sudokuGrid;
 let puzzleGrid;
 let selectedCell = null;
@@ -213,6 +222,24 @@ romanNumerals.forEach(function(numeral) {
 
 document.getElementById("newGameBtn").addEventListener("click", function() {
     startNewGame();
+});
+
+const difficultyButtons = document.querySelectorAll(".diff-btn");
+
+difficultyButtons.forEach(function(btn) {
+    if (btn.dataset.level === currentDifficulty) {
+        btn.classList.add("active");
+    }
+
+    btn.addEventListener("click", function() {
+        difficultyButtons.forEach(function(b) {
+            b.classList.remove("active");
+        });
+        btn.classList.add("active");
+
+        currentDifficulty = btn.dataset.level;
+        startNewGame();
+    });
 });
 
 startNewGame();
