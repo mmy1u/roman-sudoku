@@ -75,7 +75,23 @@ function createPuzzle(solvedGrid, cellsToRemove) {
 
     return puzzle;
 }
+function checkWin() {
+    const cells = document.querySelectorAll(".cell");
 
+    for (let i = 0; i < cells.length; i++) {
+        const cell = cells[i];
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        const correctNumber = sudokuGrid[row][col];
+        const correctNumeral = romanNumerals[correctNumber - 1];
+
+        if (cell.textContent !== correctNumeral) {
+            return false;
+        }
+    }
+
+    return true;
+}
 const sudokuGrid = createEmptyGrid();
 fillGrid(sudokuGrid);
 
