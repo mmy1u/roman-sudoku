@@ -91,6 +91,8 @@ for (let row = 0; row < 9; row++) {
 
         const cell = document.createElement("div");
         cell.classList.add("cell");
+        cell.dataset.row = row;
+        cell.dataset.col = col;
 
         const numberInCell = puzzleGrid[row][col];
 
@@ -123,6 +125,16 @@ romanNumerals.forEach(function(numeral) {
     btn.addEventListener("click", function() {
         if (selectedCell !== null) {
             selectedCell.textContent = numeral;
+
+            const row = parseInt(selectedCell.dataset.row);
+            const col = parseInt(selectedCell.dataset.col);
+            const correctNumber = sudokuGrid[row][col];
+
+            if (numeral === romanNumerals[correctNumber - 1]) {
+                selectedCell.classList.remove("error");
+            } else {
+                selectedCell.classList.add("error");
+            }
         }
     });
 
