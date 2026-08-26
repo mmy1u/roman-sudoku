@@ -127,6 +127,22 @@ function renderBoard() {
     }
 }
 
+function applyBoxBorders() {
+    const cells = document.querySelectorAll(".cell");
+
+    cells.forEach(function(cell) {
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+
+        if (col % 3 === 0 && col !== 0) {
+            cell.style.borderLeft = "3px solid #3D2645";
+        }
+        if (row % 3 === 0 && row !== 0) {
+            cell.style.borderTop = "3px solid #3D2645";
+        }
+    });
+}
+
 function updateTimerDisplay() {
     const minutes = Math.floor(secondsElapsed / 60);
     const seconds = secondsElapsed % 60;
@@ -168,6 +184,7 @@ function startNewGame() {
     document.getElementById("winMessage").style.display = "none";
 
     renderBoard();
+    applyBoxBorders();
     startTimer();
 }
 
@@ -182,6 +199,7 @@ function restartPuzzle() {
     document.getElementById("winMessage").style.display = "none";
 
     renderBoard();
+    applyBoxBorders();
     startTimer();
 }
 
