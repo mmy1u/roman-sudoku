@@ -34,3 +34,16 @@ h1 {
     color: #1a1a2e;
     border-radius: 3px;
 }
+.given {
+    background-color: #e0e0e0;
+    color: #000000;
+}
+
+.editable {
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.editable:hover {
+    background-color: #dcefff;
+}
