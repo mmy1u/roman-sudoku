@@ -7,21 +7,18 @@ function createEmptyGrid() {
 }
 
 function isValid(grid, row, col, num) {
-    // تحقق 1: هل الرقم موجود بنفس الصف؟
     for (let i = 0; i < 9; i++) {
         if (grid[row][i] === num) {
             return false;
         }
     }
 
-    // تحقق 2: هل الرقم موجود بنفس العمود؟
     for (let i = 0; i < 9; i++) {
         if (grid[i][col] === num) {
             return false;
         }
     }
 
-    // تحقق 3: هل الرقم موجود بنفس المربع 3×3؟
     const boxRowStart = Math.floor(row / 3) * 3;
     const boxColStart = Math.floor(col / 3) * 3;
 
@@ -33,9 +30,9 @@ function isValid(grid, row, col, num) {
         }
     }
 
-    // اجتاز كل الفحوصات = الرقم مسموح
     return true;
 }
+
 function fillGrid(grid) {
     for (let row = 0; row < 9; row++) {
         for (let col = 0; col < 9; col++) {
@@ -61,9 +58,29 @@ function fillGrid(grid) {
     }
     return true;
 }
+
+function createPuzzle(solvedGrid, cellsToRemove) {
+    const puzzle = solvedGrid.map(row => row.slice());
+
+    let removed = 0;
+    while (removed < cellsToRemove) {
+        const row = Math.floor(Math.random() * 9);
+        const col = Math.floor(Math.random() * 9);
+
+        if (puzzle[row][col] !== 0) {
+            puzzle[row][col] = 0;
+            removed++;
+        }
+    }
+
+    return puzzle;
+}
+
 const sudokuGrid = createEmptyGrid();
 fillGrid(sudokuGrid);
-console.log(sudokuGrid);
+
+const puzzleGrid = createPuzzle(sudokuGrid, 40);
+console.log(puzzleGrid);
 
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
@@ -75,8 +92,11 @@ for (let row = 0; row < 9; row++) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
 
-        const numberInCell = sudokuGrid[row][col];
-        cell.textContent = romanNumerals[numberInCell - 1];
+        const numberInCell = puzzleGrid[row][col];
+
+        if (numberInCell !== 0) {
+            cell.textContent = romanNumerals[numberInCell - 1];
+        }
 
         board.appendChild(cell);
     }
