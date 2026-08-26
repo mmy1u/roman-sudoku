@@ -206,4 +206,6 @@ h1 {
 }
 .highlighted {
     background-color: #D4B483 !important;
+}.related {
+    background-color: #F5EAD5;
 }
