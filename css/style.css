@@ -88,3 +88,17 @@ h1 {
     color: #4caf50;
     display: none;
 }
+#newGameBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #0f3460;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#newGameBtn:hover {
+    background-color: #16548f;
+}
