@@ -185,6 +185,42 @@ function updateTimerDisplay() {
     document.getElementById("timer").textContent = "⏱️ " + minutesText + ":" + secondsText;
 }
 
+function formatTime(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    const minutesText = minutes < 10 ? "0" + minutes : minutes;
+    const secondsText = seconds < 10 ? "0" + seconds : seconds;
+
+    return minutesText + ":" + secondsText;
+}
+
+function getBestTimeKey() {
+    return "romanSudokuBestTime_" + currentDifficulty;
+}
+
+function updateBestTimeDisplay() {
+    const saved = localStorage.getItem(getBestTimeKey());
+
+    if (saved === null) {
+        document.getElementById("bestTime").textContent = "🏆 --:--";
+    } else {
+        document.getElementById("bestTime").textContent = "🏆 " + formatTime(parseInt(saved));
+    }
+}
+
+function saveBestTimeIfNeeded() {
+    const saved = localStorage.getItem(getBestTimeKey());
+
+    if (saved === null || secondsElapsed < parseInt(saved)) {
+        localStorage.setItem(getBestTimeKey(), secondsElapsed);
+        updateBestTimeDisplay();
+        return true;
+    }
+
+    return false;
+}
+
 function startTimer() {
     clearInterval(timerInterval);
     secondsElapsed = 0;
@@ -212,6 +248,7 @@ function startNewGame() {
     errorCount = 0;
     moveHistory = [];
     updateErrorDisplay();
+    updateBestTimeDisplay();
 
     document.getElementById("winMessage").style.display = "none";
 
@@ -284,7 +321,9 @@ function giveHint() {
 
     if (checkWin()) {
         clearInterval(timerInterval);
-        document.getElementById("winMessage").textContent = "🎉 مبروك! حللت اللغز بنجاح!";
+        const isNewBest = saveBestTimeIfNeeded();
+        const message = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
+        document.getElementById("winMessage").textContent = message;
         document.getElementById("winMessage").style.display = "block";
     }
 }
@@ -339,7 +378,9 @@ romanNumerals.forEach(function(numeral) {
 
             if (checkWin()) {
                 clearInterval(timerInterval);
-                document.getElementById("winMessage").textContent = "🎉 مبروك! حللت اللغز بنجاح!";
+                const isNewBest = saveBestTimeIfNeeded();
+                const message = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
+                document.getElementById("winMessage").textContent = message;
                 document.getElementById("winMessage").style.display = "block";
             }
         }
