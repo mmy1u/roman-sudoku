@@ -75,6 +75,7 @@ function createPuzzle(solvedGrid, cellsToRemove) {
 
     return puzzle;
 }
+
 function checkWin() {
     const cells = document.querySelectorAll(".cell");
 
@@ -92,6 +93,7 @@ function checkWin() {
 
     return true;
 }
+
 const sudokuGrid = createEmptyGrid();
 fillGrid(sudokuGrid);
 
@@ -150,6 +152,11 @@ romanNumerals.forEach(function(numeral) {
                 selectedCell.classList.remove("error");
             } else {
                 selectedCell.classList.add("error");
+            }
+
+            if (checkWin()) {
+                document.getElementById("winMessage").textContent = "🎉 مبروك! حللت اللغز بنجاح!";
+                document.getElementById("winMessage").style.display = "block";
             }
         }
     });
