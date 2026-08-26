@@ -118,12 +118,32 @@ function renderBoard() {
                 document.querySelectorAll(".cell").forEach(function(c) {
                     c.classList.remove("selected");
                     c.classList.remove("highlighted");
+                    c.classList.remove("related");
                 });
+
                 cell.classList.add("selected");
 
                 if (cell.classList.contains("editable")) {
                     selectedCell = cell;
                 }
+
+                const clickedRow = parseInt(cell.dataset.row);
+                const clickedCol = parseInt(cell.dataset.col);
+                const boxRowStart = Math.floor(clickedRow / 3) * 3;
+                const boxColStart = Math.floor(clickedCol / 3) * 3;
+
+                document.querySelectorAll(".cell").forEach(function(c) {
+                    const r = parseInt(c.dataset.row);
+                    const cCol = parseInt(c.dataset.col);
+                    const inSameRow = r === clickedRow;
+                    const inSameCol = cCol === clickedCol;
+                    const inSameBox = r >= boxRowStart && r < boxRowStart + 3 &&
+                                       cCol >= boxColStart && cCol < boxColStart + 3;
+
+                    if ((inSameRow || inSameCol || inSameBox) && c !== cell) {
+                        c.classList.add("related");
+                    }
+                });
 
                 if (cell.textContent !== "") {
                     document.querySelectorAll(".cell").forEach(function(c) {
