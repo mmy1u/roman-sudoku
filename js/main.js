@@ -98,6 +98,13 @@ for (let row = 0; row < 9; row++) {
             cell.classList.add("given");
         } else {
             cell.classList.add("editable");
+
+            cell.addEventListener("click", function() {
+                document.querySelectorAll(".cell").forEach(function(c) {
+                    c.classList.remove("selected");
+                });
+                cell.classList.add("selected");
+            });
         }
 
         board.appendChild(cell);
