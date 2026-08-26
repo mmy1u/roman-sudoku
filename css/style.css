@@ -78,3 +78,6 @@ h1 {
 .num-btn:hover {
     background-color: #ff6b81;
 }
+.error {
+    color: #ff0000 !important;
+}
