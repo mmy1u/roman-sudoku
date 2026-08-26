@@ -195,6 +195,50 @@ function undoMove() {
     lastMove.cell.classList.remove("error");
 }
 
+function checkBoard() {
+    const cells = document.querySelectorAll(".editable");
+
+    cells.forEach(function(cell) {
+        if (cell.textContent === "") {
+            return;
+        }
+
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        const correctNumeral = romanNumerals[sudokuGrid[row][col] - 1];
+
+        if (cell.textContent === correctNumeral) {
+            cell.classList.remove("error");
+        } else {
+            cell.classList.add("error");
+        }
+    });
+}
+
+function giveHint() {
+    if (selectedCell === null) {
+        return;
+    }
+
+    const row = parseInt(selectedCell.dataset.row);
+    const col = parseInt(selectedCell.dataset.col);
+    const correctNumeral = romanNumerals[sudokuGrid[row][col] - 1];
+
+    moveHistory.push({
+        cell: selectedCell,
+        previousValue: selectedCell.textContent
+    });
+
+    selectedCell.textContent = correctNumeral;
+    selectedCell.classList.remove("error");
+
+    if (checkWin()) {
+        clearInterval(timerInterval);
+        document.getElementById("winMessage").textContent = "🎉 مبروك! حللت اللغز بنجاح!";
+        document.getElementById("winMessage").style.display = "block";
+    }
+}
+
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 const board = document.getElementById("board");
 const numberPad = document.getElementById("numberPad");
@@ -264,6 +308,14 @@ document.getElementById("restartBtn").addEventListener("click", function() {
 
 document.getElementById("undoBtn").addEventListener("click", function() {
     undoMove();
+});
+
+document.getElementById("checkBtn").addEventListener("click", function() {
+    checkBoard();
+});
+
+document.getElementById("hintBtn").addEventListener("click", function() {
+    giveHint();
 });
 
 const difficultyButtons = document.querySelectorAll(".diff-btn");
