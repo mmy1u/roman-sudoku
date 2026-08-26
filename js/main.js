@@ -127,6 +127,31 @@ function renderBoard() {
     }
 }
 
+function updateTimerDisplay() {
+    const minutes = Math.floor(secondsElapsed / 60);
+    const seconds = secondsElapsed % 60;
+
+    const minutesText = minutes < 10 ? "0" + minutes : minutes;
+    const secondsText = seconds < 10 ? "0" + seconds : seconds;
+
+    document.getElementById("timer").textContent = "⏱️ " + minutesText + ":" + secondsText;
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    secondsElapsed = 0;
+    updateTimerDisplay();
+
+    timerInterval = setInterval(function() {
+        secondsElapsed++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function updateErrorDisplay() {
+    document.getElementById("errorCount").textContent = "❌ " + errorCount;
+}
+
 function startNewGame() {
     sudokuGrid = createEmptyGrid();
     fillGrid(sudokuGrid);
@@ -134,10 +159,13 @@ function startNewGame() {
     puzzleGrid = createPuzzle(sudokuGrid, 40);
 
     selectedCell = null;
+    errorCount = 0;
+    updateErrorDisplay();
 
     document.getElementById("winMessage").style.display = "none";
 
     renderBoard();
+    startTimer();
 }
 
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
@@ -147,6 +175,9 @@ const numberPad = document.getElementById("numberPad");
 let sudokuGrid;
 let puzzleGrid;
 let selectedCell = null;
+let secondsElapsed = 0;
+let timerInterval;
+let errorCount = 0;
 
 romanNumerals.forEach(function(numeral) {
     const btn = document.createElement("div");
@@ -165,9 +196,12 @@ romanNumerals.forEach(function(numeral) {
                 selectedCell.classList.remove("error");
             } else {
                 selectedCell.classList.add("error");
+                errorCount++;
+                updateErrorDisplay();
             }
 
             if (checkWin()) {
+                clearInterval(timerInterval);
                 document.getElementById("winMessage").textContent = "🎉 مبروك! حللت اللغز بنجاح!";
                 document.getElementById("winMessage").style.display = "block";
             }
