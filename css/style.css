@@ -12,3 +12,23 @@ h1 {
     font-family: Georgia, serif;
     font-size: 48px;
 }
+#board {
+    display: grid;
+    grid-template-columns: repeat(9, 40px);
+    grid-template-rows: repeat(9, 40px);
+    gap: 2px;
+    background-color: #0f0f1e;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.cell {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a1a2e;
+    border-radius: 3px;
+}
