@@ -62,18 +62,22 @@ function fillGrid(grid) {
     return true;
 }
 const sudokuGrid = createEmptyGrid();
+fillGrid(sudokuGrid);
 console.log(sudokuGrid);
 
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
 const board = document.getElementById("board");
 
-for (let i = 0; i < 81; i++) {
-    const cell = document.createElement("div");
-    cell.classList.add("cell");
+for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
 
-    const randomNumber = Math.floor(Math.random() * 9);
-    cell.textContent = romanNumerals[randomNumber];
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
 
-    board.appendChild(cell);
+        const numberInCell = sudokuGrid[row][col];
+        cell.textContent = romanNumerals[numberInCell - 1];
+
+        board.appendChild(cell);
+    }
 }
