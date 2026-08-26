@@ -204,3 +204,6 @@ h1 {
     flex-wrap: wrap;
     justify-content: center;
 }
+.highlighted {
+    background-color: #E8DCC8;
+}
