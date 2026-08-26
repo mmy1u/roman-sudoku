@@ -1,0 +1,14 @@
+body {
+    background-color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h1 {
+    color: #e94560;
+    font-family: Georgia, serif;
+    font-size: 48px;
+}
