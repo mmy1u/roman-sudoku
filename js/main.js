@@ -158,15 +158,41 @@ function startNewGame() {
 
     const cellsToRemove = difficultyLevels[currentDifficulty];
     puzzleGrid = createPuzzle(sudokuGrid, cellsToRemove);
+    originalPuzzleGrid = puzzleGrid.map(row => row.slice());
 
     selectedCell = null;
     errorCount = 0;
+    moveHistory = [];
     updateErrorDisplay();
 
     document.getElementById("winMessage").style.display = "none";
 
     renderBoard();
     startTimer();
+}
+
+function restartPuzzle() {
+    puzzleGrid = originalPuzzleGrid.map(row => row.slice());
+
+    selectedCell = null;
+    errorCount = 0;
+    moveHistory = [];
+    updateErrorDisplay();
+
+    document.getElementById("winMessage").style.display = "none";
+
+    renderBoard();
+    startTimer();
+}
+
+function undoMove() {
+    if (moveHistory.length === 0) {
+        return;
+    }
+
+    const lastMove = moveHistory.pop();
+    lastMove.cell.textContent = lastMove.previousValue;
+    lastMove.cell.classList.remove("error");
 }
 
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
@@ -183,10 +209,12 @@ const difficultyLevels = {
 let currentDifficulty = "medium";
 let sudokuGrid;
 let puzzleGrid;
+let originalPuzzleGrid;
 let selectedCell = null;
 let secondsElapsed = 0;
 let timerInterval;
 let errorCount = 0;
+let moveHistory = [];
 
 romanNumerals.forEach(function(numeral) {
     const btn = document.createElement("div");
@@ -195,6 +223,12 @@ romanNumerals.forEach(function(numeral) {
 
     btn.addEventListener("click", function() {
         if (selectedCell !== null) {
+
+            moveHistory.push({
+                cell: selectedCell,
+                previousValue: selectedCell.textContent
+            });
+
             selectedCell.textContent = numeral;
 
             const row = parseInt(selectedCell.dataset.row);
@@ -222,6 +256,14 @@ romanNumerals.forEach(function(numeral) {
 
 document.getElementById("newGameBtn").addEventListener("click", function() {
     startNewGame();
+});
+
+document.getElementById("restartBtn").addEventListener("click", function() {
+    restartPuzzle();
+});
+
+document.getElementById("undoBtn").addEventListener("click", function() {
+    undoMove();
 });
 
 const difficultyButtons = document.querySelectorAll(".diff-btn");
