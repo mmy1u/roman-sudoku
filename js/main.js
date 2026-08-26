@@ -84,6 +84,7 @@ const puzzleGrid = createPuzzle(sudokuGrid, 40);
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
 const board = document.getElementById("board");
+let selectedCell = null;
 
 for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
@@ -104,9 +105,26 @@ for (let row = 0; row < 9; row++) {
                     c.classList.remove("selected");
                 });
                 cell.classList.add("selected");
+                selectedCell = cell;
             });
         }
 
         board.appendChild(cell);
     }
 }
+
+const numberPad = document.getElementById("numberPad");
+
+romanNumerals.forEach(function(numeral) {
+    const btn = document.createElement("div");
+    btn.classList.add("num-btn");
+    btn.textContent = numeral;
+
+    btn.addEventListener("click", function() {
+        if (selectedCell !== null) {
+            selectedCell.textContent = numeral;
+        }
+    });
+
+    numberPad.appendChild(btn);
+});
