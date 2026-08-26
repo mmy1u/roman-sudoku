@@ -1,3 +1,13 @@
+function createEmptyGrid() {
+    const grid = [];
+    for (let row = 0; row < 9; row++) {
+        grid.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    }
+    return grid;
+}
+
+const sudokuGrid = createEmptyGrid();
+console.log(sudokuGrid);
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
 const board = document.getElementById("board");
