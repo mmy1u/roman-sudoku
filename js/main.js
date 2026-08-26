@@ -112,15 +112,27 @@ function renderBoard() {
                 cell.classList.add("given");
             } else {
                 cell.classList.add("editable");
-
-                cell.addEventListener("click", function() {
-                    document.querySelectorAll(".cell").forEach(function(c) {
-                        c.classList.remove("selected");
-                    });
-                    cell.classList.add("selected");
-                    selectedCell = cell;
-                });
             }
+
+            cell.addEventListener("click", function() {
+                document.querySelectorAll(".cell").forEach(function(c) {
+                    c.classList.remove("selected");
+                    c.classList.remove("highlighted");
+                });
+                cell.classList.add("selected");
+
+                if (cell.classList.contains("editable")) {
+                    selectedCell = cell;
+                }
+
+                if (cell.textContent !== "") {
+                    document.querySelectorAll(".cell").forEach(function(c) {
+                        if (c.textContent === cell.textContent && c !== cell) {
+                            c.classList.add("highlighted");
+                        }
+                    });
+                }
+            });
 
             board.appendChild(cell);
         }
