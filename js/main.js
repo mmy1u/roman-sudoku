@@ -80,7 +80,6 @@ const sudokuGrid = createEmptyGrid();
 fillGrid(sudokuGrid);
 
 const puzzleGrid = createPuzzle(sudokuGrid, 40);
-console.log(puzzleGrid);
 
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
@@ -96,6 +95,9 @@ for (let row = 0; row < 9; row++) {
 
         if (numberInCell !== 0) {
             cell.textContent = romanNumerals[numberInCell - 1];
+            cell.classList.add("given");
+        } else {
+            cell.classList.add("editable");
         }
 
         board.appendChild(cell);
