@@ -94,46 +94,59 @@ function checkWin() {
     return true;
 }
 
-const sudokuGrid = createEmptyGrid();
-fillGrid(sudokuGrid);
+function renderBoard() {
+    board.innerHTML = "";
 
-const puzzleGrid = createPuzzle(sudokuGrid, 40);
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
 
-const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.dataset.row = row;
+            cell.dataset.col = col;
 
-const board = document.getElementById("board");
-let selectedCell = null;
+            const numberInCell = puzzleGrid[row][col];
 
-for (let row = 0; row < 9; row++) {
-    for (let col = 0; col < 9; col++) {
+            if (numberInCell !== 0) {
+                cell.textContent = romanNumerals[numberInCell - 1];
+                cell.classList.add("given");
+            } else {
+                cell.classList.add("editable");
 
-        const cell = document.createElement("div");
-        cell.classList.add("cell");
-        cell.dataset.row = row;
-        cell.dataset.col = col;
-
-        const numberInCell = puzzleGrid[row][col];
-
-        if (numberInCell !== 0) {
-            cell.textContent = romanNumerals[numberInCell - 1];
-            cell.classList.add("given");
-        } else {
-            cell.classList.add("editable");
-
-            cell.addEventListener("click", function() {
-                document.querySelectorAll(".cell").forEach(function(c) {
-                    c.classList.remove("selected");
+                cell.addEventListener("click", function() {
+                    document.querySelectorAll(".cell").forEach(function(c) {
+                        c.classList.remove("selected");
+                    });
+                    cell.classList.add("selected");
+                    selectedCell = cell;
                 });
-                cell.classList.add("selected");
-                selectedCell = cell;
-            });
-        }
+            }
 
-        board.appendChild(cell);
+            board.appendChild(cell);
+        }
     }
 }
 
+function startNewGame() {
+    sudokuGrid = createEmptyGrid();
+    fillGrid(sudokuGrid);
+
+    puzzleGrid = createPuzzle(sudokuGrid, 40);
+
+    selectedCell = null;
+
+    document.getElementById("winMessage").style.display = "none";
+
+    renderBoard();
+}
+
+const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+const board = document.getElementById("board");
 const numberPad = document.getElementById("numberPad");
+
+let sudokuGrid;
+let puzzleGrid;
+let selectedCell = null;
 
 romanNumerals.forEach(function(numeral) {
     const btn = document.createElement("div");
@@ -163,3 +176,9 @@ romanNumerals.forEach(function(numeral) {
 
     numberPad.appendChild(btn);
 });
+
+document.getElementById("newGameBtn").addEventListener("click", function() {
+    startNewGame();
+});
+
+startNewGame();
