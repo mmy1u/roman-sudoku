@@ -541,5 +541,10 @@ difficultyButtons.forEach(function(btn) {
         startNewGame();
     });
 });
+let notesMode = false;
 
+document.getElementById("notesBtn").addEventListener("click", function() {
+    notesMode = !notesMode;
+    document.getElementById("notesBtn").classList.toggle("active", notesMode);
+});
 startNewGame();
