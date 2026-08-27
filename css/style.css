@@ -264,3 +264,19 @@ h1 {
     display: inline-block;
     font-family: 'Cinzel', serif;
 }
+#soundBtn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    background-color: #3D2645;
+    color: #EDE6D6;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 50;
+}
