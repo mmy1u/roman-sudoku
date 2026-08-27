@@ -281,6 +281,25 @@ function giveHint() {
     }
 }
 
+function revealSolution() {
+    const confirmed = confirm("متأكد؟ هذا يعرض الحل الكامل ويوقف المحاولة الحالية.");
+
+    if (!confirmed) {
+        return;
+    }
+
+    clearInterval(timerInterval);
+
+    document.querySelectorAll(".editable").forEach(function(cell) {
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        cell.textContent = romanNumerals[sudokuGrid[row][col] - 1];
+        cell.classList.remove("error");
+    });
+
+    updateNumberPadState();
+}
+
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 const board = document.getElementById("board");
 const numberPad = document.getElementById("numberPad");
@@ -345,6 +364,7 @@ document.getElementById("restartBtn").addEventListener("click", restartPuzzle);
 document.getElementById("undoBtn").addEventListener("click", undoMove);
 document.getElementById("checkBtn").addEventListener("click", checkBoard);
 document.getElementById("hintBtn").addEventListener("click", giveHint);
+document.getElementById("solveBtn").addEventListener("click", revealSolution);
 
 document.getElementById("statsBtn").addEventListener("click", function() {
     updateStatsDisplay();
