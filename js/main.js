@@ -8,50 +8,32 @@ function createEmptyGrid() {
 
 function isValid(grid, row, col, num) {
     for (let i = 0; i < 9; i++) {
-        if (grid[row][i] === num) {
-            return false;
-        }
+        if (grid[row][i] === num) return false;
     }
-
     for (let i = 0; i < 9; i++) {
-        if (grid[i][col] === num) {
-            return false;
-        }
+        if (grid[i][col] === num) return false;
     }
-
     const boxRowStart = Math.floor(row / 3) * 3;
     const boxColStart = Math.floor(col / 3) * 3;
-
     for (let r = 0; r < 3; r++) {
         for (let c = 0; c < 3; c++) {
-            if (grid[boxRowStart + r][boxColStart + c] === num) {
-                return false;
-            }
+            if (grid[boxRowStart + r][boxColStart + c] === num) return false;
         }
     }
-
     return true;
 }
 
 function fillGrid(grid) {
     for (let row = 0; row < 9; row++) {
         for (let col = 0; col < 9; col++) {
-
             if (grid[row][col] === 0) {
-
                 for (let num = 1; num <= 9; num++) {
-
                     if (isValid(grid, row, col, num)) {
                         grid[row][col] = num;
-
-                        if (fillGrid(grid)) {
-                            return true;
-                        }
-
+                        if (fillGrid(grid)) return true;
                         grid[row][col] = 0;
                     }
                 }
-
                 return false;
             }
         }
@@ -61,37 +43,64 @@ function fillGrid(grid) {
 
 function createPuzzle(solvedGrid, cellsToRemove) {
     const puzzle = solvedGrid.map(row => row.slice());
-
     let removed = 0;
     while (removed < cellsToRemove) {
         const row = Math.floor(Math.random() * 9);
         const col = Math.floor(Math.random() * 9);
-
         if (puzzle[row][col] !== 0) {
             puzzle[row][col] = 0;
             removed++;
         }
     }
-
     return puzzle;
+}
+
+function hasFinalAnswer(cell) {
+    return cell.children.length === 0 && cell.textContent !== "";
 }
 
 function checkWin() {
     const cells = document.querySelectorAll(".cell");
-
     for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
-        const correctNumber = sudokuGrid[row][col];
-        const correctNumeral = romanNumerals[correctNumber - 1];
-
-        if (cell.textContent !== correctNumeral) {
+        const correctNumeral = romanNumerals[sudokuGrid[row][col] - 1];
+        if (!hasFinalAnswer(cell) || cell.textContent !== correctNumeral) {
             return false;
         }
     }
-
     return true;
+}
+
+function toggleNote(cell, numeral) {
+    if (hasFinalAnswer(cell)) {
+        return;
+    }
+
+    let notesGrid = cell.querySelector(".notes-grid");
+    if (notesGrid === null) {
+        notesGrid = document.createElement("div");
+        notesGrid.classList.add("notes-grid");
+        romanNumerals.forEach(function(n) {
+            const noteSpan = document.createElement("div");
+            noteSpan.classList.add("note-num");
+            noteSpan.dataset.numeral = n;
+            notesGrid.appendChild(noteSpan);
+        });
+        cell.textContent = "";
+        cell.appendChild(notesGrid);
+    }
+
+    const noteSpan = notesGrid.querySelector('[data-numeral="' + numeral + '"]');
+    noteSpan.textContent = noteSpan.textContent === "" ? numeral : "";
+
+    const anyNoteFilled = Array.from(notesGrid.children).some(function(el) {
+        return el.textContent !== "";
+    });
+    if (!anyNoteFilled) {
+        cell.innerHTML = "";
+    }
 }
 
 function renderBoard() {
@@ -118,9 +127,7 @@ function renderBoard() {
                 playClickSound();
 
                 document.querySelectorAll(".cell").forEach(function(c) {
-                    c.classList.remove("selected");
-                    c.classList.remove("highlighted");
-                    c.classList.remove("related");
+                    c.classList.remove("selected", "highlighted", "related");
                 });
 
                 cell.classList.add("selected");
@@ -147,9 +154,9 @@ function renderBoard() {
                     }
                 });
 
-                if (cell.textContent !== "") {
+                if (hasFinalAnswer(cell)) {
                     document.querySelectorAll(".cell").forEach(function(c) {
-                        if (c.textContent === cell.textContent && c !== cell) {
+                        if (hasFinalAnswer(c) && c.textContent === cell.textContent && c !== cell) {
                             c.classList.add("highlighted");
                         }
                     });
@@ -162,39 +169,28 @@ function renderBoard() {
 }
 
 function applyBoxBorders() {
-    const cells = document.querySelectorAll(".cell");
-
-    cells.forEach(function(cell) {
+    document.querySelectorAll(".cell").forEach(function(cell) {
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
-
-        if (col % 3 === 0 && col !== 0) {
-            cell.style.borderLeft = "3px solid #3D2645";
-        }
-        if (row % 3 === 0 && row !== 0) {
-            cell.style.borderTop = "3px solid #3D2645";
-        }
+        if (col % 3 === 0 && col !== 0) cell.style.borderLeft = "3px solid #3D2645";
+        if (row % 3 === 0 && row !== 0) cell.style.borderTop = "3px solid #3D2645";
     });
 }
 
 function updateTimerDisplay() {
     const minutes = Math.floor(secondsElapsed / 60);
     const seconds = secondsElapsed % 60;
-
-    const minutesText = minutes < 10 ? "0" + minutes : minutes;
-    const secondsText = seconds < 10 ? "0" + seconds : seconds;
-
-    document.getElementById("timer").textContent = "⏱️ " + minutesText + ":" + secondsText;
+    const m = minutes < 10 ? "0" + minutes : minutes;
+    const s = seconds < 10 ? "0" + seconds : seconds;
+    document.getElementById("timer").textContent = "⏱️ " + m + ":" + s;
 }
 
 function formatTime(totalSeconds) {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-
-    const minutesText = minutes < 10 ? "0" + minutes : minutes;
-    const secondsText = seconds < 10 ? "0" + seconds : seconds;
-
-    return minutesText + ":" + secondsText;
+    const m = minutes < 10 ? "0" + minutes : minutes;
+    const s = seconds < 10 ? "0" + seconds : seconds;
+    return m + ":" + s;
 }
 
 function getBestTimeKey() {
@@ -203,23 +199,16 @@ function getBestTimeKey() {
 
 function updateBestTimeDisplay() {
     const saved = localStorage.getItem(getBestTimeKey());
-
-    if (saved === null) {
-        document.getElementById("bestTime").textContent = "🏆 --:--";
-    } else {
-        document.getElementById("bestTime").textContent = "🏆 " + formatTime(parseInt(saved));
-    }
+    document.getElementById("bestTime").textContent = "🏆 " + (saved === null ? "--:--" : formatTime(parseInt(saved)));
 }
 
 function saveBestTimeIfNeeded() {
     const saved = localStorage.getItem(getBestTimeKey());
-
     if (saved === null || secondsElapsed < parseInt(saved)) {
         localStorage.setItem(getBestTimeKey(), secondsElapsed);
         updateBestTimeDisplay();
         return true;
     }
-
     return false;
 }
 
@@ -241,13 +230,10 @@ function updateStatsDisplay() {
 function recordWin() {
     clearInterval(timerInterval);
     playWinSound();
-
     const totalSolved = parseInt(localStorage.getItem("romanSudokuTotalSolved")) || 0;
     localStorage.setItem("romanSudokuTotalSolved", totalSolved + 1);
-
     const isNewBest = saveBestTimeIfNeeded();
-    const message = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
-    document.getElementById("winMessage").textContent = message;
+    document.getElementById("winMessage").textContent = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
     document.getElementById("winMessage").style.display = "block";
 }
 
@@ -255,42 +241,25 @@ let soundEnabled = true;
 let audioContext = null;
 
 function playTone(frequency, duration) {
-    if (!soundEnabled) {
-        return;
-    }
-
+    if (!soundEnabled) return;
     if (audioContext === null) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
-
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-
     oscillator.frequency.value = frequency;
     oscillator.type = "sine";
-
     gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-
     oscillator.start();
     oscillator.stop(audioContext.currentTime + duration);
 }
 
-function playClickSound() {
-    playTone(400, 0.08);
-}
-
-function playCorrectSound() {
-    playTone(600, 0.15);
-}
-
-function playErrorSound() {
-    playTone(150, 0.2);
-}
-
+function playClickSound() { playTone(400, 0.08); }
+function playCorrectSound() { playTone(600, 0.15); }
+function playErrorSound() { playTone(150, 0.2); }
 function playWinSound() {
     playTone(500, 0.15);
     setTimeout(function() { playTone(700, 0.15); }, 150);
@@ -301,7 +270,6 @@ function startTimer() {
     clearInterval(timerInterval);
     secondsElapsed = 0;
     updateTimerDisplay();
-
     timerInterval = setInterval(function() {
         secondsElapsed++;
         updateTimerDisplay();
@@ -313,24 +281,15 @@ function updateErrorDisplay() {
 }
 
 function updateNumberPadState() {
-    const allNumBtns = document.querySelectorAll(".num-btn");
-
-    allNumBtns.forEach(function(btn) {
+    document.querySelectorAll(".num-btn").forEach(function(btn) {
         const numeral = btn.textContent;
-        const cellsWithThisNumber = document.querySelectorAll(".cell");
-
         let count = 0;
-        cellsWithThisNumber.forEach(function(cell) {
-            if (cell.textContent === numeral && !cell.classList.contains("error")) {
+        document.querySelectorAll(".cell").forEach(function(cell) {
+            if (hasFinalAnswer(cell) && cell.textContent === numeral && !cell.classList.contains("error")) {
                 count++;
             }
         });
-
-        if (count >= 9) {
-            btn.classList.add("completed");
-        } else {
-            btn.classList.remove("completed");
-        }
+        btn.classList.toggle("completed", count >= 9);
     });
 }
 
@@ -373,10 +332,7 @@ function restartPuzzle() {
 }
 
 function undoMove() {
-    if (moveHistory.length === 0) {
-        return;
-    }
-
+    if (moveHistory.length === 0) return;
     const lastMove = moveHistory.pop();
     lastMove.cell.textContent = lastMove.previousValue;
     lastMove.cell.classList.remove("error");
@@ -384,40 +340,26 @@ function undoMove() {
 }
 
 function checkBoard() {
-    const cells = document.querySelectorAll(".editable");
-
-    cells.forEach(function(cell) {
-        if (cell.textContent === "") {
+    document.querySelectorAll(".editable").forEach(function(cell) {
+        if (!hasFinalAnswer(cell)) {
             return;
         }
-
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
         const correctNumeral = romanNumerals[sudokuGrid[row][col] - 1];
-
-        if (cell.textContent === correctNumeral) {
-            cell.classList.remove("error");
-        } else {
-            cell.classList.add("error");
-        }
+        cell.classList.toggle("error", cell.textContent !== correctNumeral);
     });
-
     updateNumberPadState();
 }
 
 function giveHint() {
-    if (selectedCell === null) {
-        return;
-    }
+    if (selectedCell === null) return;
 
     const row = parseInt(selectedCell.dataset.row);
     const col = parseInt(selectedCell.dataset.col);
     const correctNumeral = romanNumerals[sudokuGrid[row][col] - 1];
 
-    moveHistory.push({
-        cell: selectedCell,
-        previousValue: selectedCell.textContent
-    });
+    moveHistory.push({ cell: selectedCell, previousValue: selectedCell.textContent });
 
     selectedCell.textContent = correctNumeral;
     selectedCell.classList.remove("error");
@@ -433,12 +375,7 @@ const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 const board = document.getElementById("board");
 const numberPad = document.getElementById("numberPad");
 
-const difficultyLevels = {
-    easy: 30,
-    medium: 40,
-    hard: 50,
-    expert: 58
-};
+const difficultyLevels = { easy: 30, medium: 40, hard: 50, expert: 58 };
 
 let currentDifficulty = "medium";
 let sudokuGrid;
@@ -449,6 +386,7 @@ let secondsElapsed = 0;
 let timerInterval;
 let errorCount = 0;
 let moveHistory = [];
+let notesMode = false;
 
 romanNumerals.forEach(function(numeral) {
     const btn = document.createElement("div");
@@ -456,59 +394,47 @@ romanNumerals.forEach(function(numeral) {
     btn.textContent = numeral;
 
     btn.addEventListener("click", function() {
-        if (selectedCell !== null) {
+        if (selectedCell === null) return;
 
-            moveHistory.push({
-                cell: selectedCell,
-                previousValue: selectedCell.textContent
-            });
+        if (notesMode) {
+            toggleNote(selectedCell, numeral);
+            playClickSound();
+            return;
+        }
 
-            selectedCell.textContent = numeral;
+        moveHistory.push({ cell: selectedCell, previousValue: selectedCell.textContent });
 
-            const row = parseInt(selectedCell.dataset.row);
-            const col = parseInt(selectedCell.dataset.col);
-            const correctNumber = sudokuGrid[row][col];
+        selectedCell.textContent = numeral;
 
-            if (numeral === romanNumerals[correctNumber - 1]) {
-                selectedCell.classList.remove("error");
-                playCorrectSound();
-            } else {
-                selectedCell.classList.add("error");
-                playErrorSound();
-                errorCount++;
-                updateErrorDisplay();
-            }
+        const row = parseInt(selectedCell.dataset.row);
+        const col = parseInt(selectedCell.dataset.col);
+        const correctNumber = sudokuGrid[row][col];
 
-            updateNumberPadState();
+        if (numeral === romanNumerals[correctNumber - 1]) {
+            selectedCell.classList.remove("error");
+            playCorrectSound();
+        } else {
+            selectedCell.classList.add("error");
+            playErrorSound();
+            errorCount++;
+            updateErrorDisplay();
+        }
 
-            if (checkWin()) {
-                recordWin();
-            }
+        updateNumberPadState();
+
+        if (checkWin()) {
+            recordWin();
         }
     });
 
     numberPad.appendChild(btn);
 });
 
-document.getElementById("newGameBtn").addEventListener("click", function() {
-    startNewGame();
-});
-
-document.getElementById("restartBtn").addEventListener("click", function() {
-    restartPuzzle();
-});
-
-document.getElementById("undoBtn").addEventListener("click", function() {
-    undoMove();
-});
-
-document.getElementById("checkBtn").addEventListener("click", function() {
-    checkBoard();
-});
-
-document.getElementById("hintBtn").addEventListener("click", function() {
-    giveHint();
-});
+document.getElementById("newGameBtn").addEventListener("click", startNewGame);
+document.getElementById("restartBtn").addEventListener("click", restartPuzzle);
+document.getElementById("undoBtn").addEventListener("click", undoMove);
+document.getElementById("checkBtn").addEventListener("click", checkBoard);
+document.getElementById("hintBtn").addEventListener("click", giveHint);
 
 document.getElementById("statsBtn").addEventListener("click", function() {
     updateStatsDisplay();
@@ -524,27 +450,22 @@ document.getElementById("soundBtn").addEventListener("click", function() {
     document.getElementById("soundBtn").textContent = soundEnabled ? "🔊" : "🔇";
 });
 
-const difficultyButtons = document.querySelectorAll(".diff-btn");
-
-difficultyButtons.forEach(function(btn) {
-    if (btn.dataset.level === currentDifficulty) {
-        btn.classList.add("active");
-    }
-
-    btn.addEventListener("click", function() {
-        difficultyButtons.forEach(function(b) {
-            b.classList.remove("active");
-        });
-        btn.classList.add("active");
-
-        currentDifficulty = btn.dataset.level;
-        startNewGame();
-    });
-});
-let notesMode = false;
-
 document.getElementById("notesBtn").addEventListener("click", function() {
     notesMode = !notesMode;
     document.getElementById("notesBtn").classList.toggle("active", notesMode);
 });
+
+const difficultyButtons = document.querySelectorAll(".diff-btn");
+difficultyButtons.forEach(function(btn) {
+    if (btn.dataset.level === currentDifficulty) {
+        btn.classList.add("active");
+    }
+    btn.addEventListener("click", function() {
+        difficultyButtons.forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        currentDifficulty = btn.dataset.level;
+        startNewGame();
+    });
+});
+
 startNewGame();
