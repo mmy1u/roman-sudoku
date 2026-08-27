@@ -311,3 +311,13 @@ h1 {
     display: none;
     animation: fadeInUp 0.4s ease;
 }
+#dailyBtn {
+    margin-bottom: 15px;
+    padding: 8px 18px;
+    background-color: #A64B2A;
+    color: #EDE6D6;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+}
