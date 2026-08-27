@@ -58,7 +58,6 @@ function createPuzzle(solvedGrid, cellsToRemove, randomFunc) {
 
     return puzzle;
 }
-}
 function seededRandom(seed) {
     let value = seed;
     return function() {
