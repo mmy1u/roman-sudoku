@@ -1,3 +1,9 @@
+function vibrateError() {
+    if (navigator.vibrate) {
+        navigator.vibrate(200);
+    }
+}
+
 function hasFinalAnswer(cell) {
     return cell.children.length === 0 && cell.textContent !== "";
 }
@@ -393,6 +399,7 @@ romanNumerals.forEach(function(numeral) {
         } else {
             selectedCell.classList.add("error");
             playErrorSound();
+            vibrateError();
             errorCount++;
             updateErrorDisplay();
         }
@@ -435,6 +442,18 @@ document.getElementById("notesBtn").addEventListener("click", function() {
     document.getElementById("notesBtn").classList.toggle("active", notesMode);
 });
 
+document.getElementById("themeBtn").addEventListener("click", function() {
+    document.body.classList.toggle("dark-theme");
+    const isDark = document.body.classList.contains("dark-theme");
+    document.getElementById("themeBtn").textContent = isDark ? "☀️" : "🌙";
+    localStorage.setItem("romanSudokuDarkTheme", isDark);
+});
+
+if (localStorage.getItem("romanSudokuDarkTheme") === "true") {
+    document.body.classList.add("dark-theme");
+    document.getElementById("themeBtn").textContent = "☀️";
+}
+
 const difficultyButtons = document.querySelectorAll(".diff-btn");
 difficultyButtons.forEach(function(btn) {
     if (btn.dataset.level === currentDifficulty) {
@@ -449,14 +468,3 @@ difficultyButtons.forEach(function(btn) {
 });
 
 startNewGame();
-document.getElementById("themeBtn").addEventListener("click", function() {
-    document.body.classList.toggle("dark-theme");
-    const isDark = document.body.classList.contains("dark-theme");
-    document.getElementById("themeBtn").textContent = isDark ? "☀️" : "🌙";
-    localStorage.setItem("romanSudokuDarkTheme", isDark);
-});
-
-if (localStorage.getItem("romanSudokuDarkTheme") === "true") {
-    document.body.classList.add("dark-theme");
-    document.getElementById("themeBtn").textContent = "☀️";
-}
