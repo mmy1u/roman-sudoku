@@ -168,6 +168,30 @@ function updateStatsDisplay() {
     });
 }
 
+const achievementsList = [
+    { id: "first", label: "🥉 أول لغز", check: function(totalSolved) { return totalSolved >= 1; } },
+    { id: "ten", label: "🥈 10 ألغاز", check: function(totalSolved) { return totalSolved >= 10; } },
+    { id: "hundred", label: "🏅 100 لغز", check: function(totalSolved) { return totalSolved >= 100; } },
+    { id: "expert", label: "👑 أول لغز خبير", check: function() { return localStorage.getItem("romanSudokuBestTime_expert") !== null; } }
+];
+
+function renderAchievements() {
+    const totalSolved = parseInt(localStorage.getItem("romanSudokuTotalSolved")) || 0;
+    const container = document.getElementById("achievementsList");
+    container.innerHTML = "";
+
+    achievementsList.forEach(function(achievement) {
+        const unlocked = achievement.check(totalSolved);
+        const div = document.createElement("div");
+        div.classList.add("achievement");
+        if (unlocked) {
+            div.classList.add("unlocked");
+        }
+        div.textContent = (unlocked ? "✅ " : "🔒 ") + achievement.label;
+        container.appendChild(div);
+    });
+}
+
 function recordWin() {
     clearInterval(timerInterval);
     playWinSound();
@@ -393,6 +417,7 @@ document.getElementById("dailyBtn").addEventListener("click", startDailyChalleng
 
 document.getElementById("statsBtn").addEventListener("click", function() {
     updateStatsDisplay();
+    renderAchievements();
     document.getElementById("statsModal").style.display = "flex";
 });
 
