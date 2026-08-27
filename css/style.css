@@ -1,5 +1,15 @@
+:root {
+    --bg-color: #EDE6D6;
+    --primary-dark: #3D2645;
+    --gold: #B8860B;
+    --ink: #2B2620;
+    --error-color: #A64B2A;
+    --cell-bg: #FBF8F2;
+    --given-bg: #E3D9C4;
+}
+
 body {
-    background-color: #EDE6D6;
+    background-color: var(--bg-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -10,19 +20,30 @@ body {
 }
 
 h1 {
-    color: #B8860B;
+    color: var(--gold);
     font-family: 'Cinzel', serif;
     font-size: 44px;
     letter-spacing: 4px;
     margin-bottom: 10px;
-    text-shadow: 1px 1px 0 #3D2645;
+    text-shadow: 1px 1px 0 var(--primary-dark);
 }
 
 #statsBtn {
     margin-bottom: 15px;
     padding: 8px 18px;
-    background-color: #3D2645;
-    color: #EDE6D6;
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+}
+
+#dailyBtn {
+    margin-bottom: 15px;
+    padding: 8px 18px;
+    background-color: var(--error-color);
+    color: var(--bg-color);
     border-radius: 4px;
     cursor: pointer;
     font-family: 'Cinzel', serif;
@@ -43,7 +64,7 @@ h1 {
 }
 
 #statsContent {
-    background-color: #EDE6D6;
+    background-color: var(--bg-color);
     padding: 30px;
     border-radius: 8px;
     text-align: center;
@@ -53,21 +74,37 @@ h1 {
 
 #statsContent h2 {
     font-family: 'Cinzel', serif;
-    color: #3D2645;
+    color: var(--primary-dark);
     margin-top: 0;
 }
 
 #statsContent p {
     font-size: 16px;
-    color: #2B2620;
+    color: var(--ink);
     margin: 8px 0;
+}
+
+#achievementsList {
+    margin-top: 12px;
+    text-align: right;
+}
+
+.achievement {
+    font-size: 14px;
+    margin: 6px 0;
+    color: #6b5a4a;
+}
+
+.achievement.unlocked {
+    color: var(--gold);
+    font-weight: bold;
 }
 
 #closeStatsBtn {
     margin-top: 15px;
     padding: 8px 20px;
-    background-color: #B8860B;
-    color: #2B2620;
+    background-color: var(--gold);
+    color: var(--ink);
     border-radius: 4px;
     cursor: pointer;
     display: inline-block;
@@ -80,8 +117,8 @@ h1 {
     left: 15px;
     width: 40px;
     height: 40px;
-    background-color: #3D2645;
-    color: #EDE6D6;
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -101,8 +138,8 @@ h1 {
 
 .diff-btn {
     padding: 8px 18px;
-    background-color: #3D2645;
-    color: #EDE6D6;
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
     border-radius: 4px;
     cursor: pointer;
     font-family: 'Cinzel', serif;
@@ -111,8 +148,8 @@ h1 {
 }
 
 .diff-btn.active {
-    background-color: #B8860B;
-    color: #2B2620;
+    background-color: var(--gold);
+    color: var(--ink);
 }
 
 #stats {
@@ -121,7 +158,7 @@ h1 {
     margin-bottom: 15px;
     font-size: 18px;
     font-weight: bold;
-    color: #3D2645;
+    color: var(--primary-dark);
     font-family: 'Cinzel', serif;
 }
 
@@ -130,7 +167,7 @@ h1 {
     grid-template-columns: repeat(9, minmax(28px, 9vw));
     grid-template-rows: repeat(9, minmax(28px, 9vw));
     gap: 2px;
-    background-color: #3D2645;
+    background-color: var(--primary-dark);
     padding: 10px;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(61, 38, 69, 0.3);
@@ -138,26 +175,26 @@ h1 {
 }
 
 .cell {
-    background-color: #FBF8F2;
+    background-color: var(--cell-bg);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: clamp(12px, 3.5vw, 18px);
     font-weight: bold;
     font-family: 'Cinzel', serif;
-    color: #2B2620;
+    color: var(--ink);
     border-radius: 2px;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .given {
-    background-color: #E3D9C4;
-    color: #3D2645;
+    background-color: var(--given-bg);
+    color: var(--primary-dark);
     box-shadow: inset 0 1px 3px rgba(43, 38, 32, 0.4);
 }
 
 .editable {
-    background-color: #FBF8F2;
+    background-color: var(--cell-bg);
     cursor: pointer;
 }
 
@@ -178,7 +215,7 @@ h1 {
 }
 
 .error {
-    color: #A64B2A !important;
+    color: var(--error-color) !important;
 }
 
 .notes-grid {
@@ -210,8 +247,8 @@ h1 {
 .num-btn {
     width: 40px;
     height: 40px;
-    background-color: #3D2645;
-    color: #EDE6D6;
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -235,8 +272,8 @@ h1 {
 #newGameBtn {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #B8860B;
-    color: #2B2620;
+    background-color: var(--gold);
+    color: var(--ink);
     font-weight: bold;
     font-family: 'Cinzel', serif;
     border-radius: 4px;
@@ -256,10 +293,10 @@ h1 {
     justify-content: center;
 }
 
-#undoBtn, #restartBtn, #checkBtn, #hintBtn, #solveBtn {
+#undoBtn, #restartBtn, #checkBtn, #hintBtn, #solveBtn, #notesBtn {
     padding: 8px 16px;
-    background-color: #3D2645;
-    color: #EDE6D6;
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
     border-radius: 4px;
     cursor: pointer;
     font-family: 'Cinzel', serif;
@@ -267,28 +304,13 @@ h1 {
     transition: transform 0.1s ease;
 }
 
-#undoBtn:active, #restartBtn:active, #checkBtn:active, #hintBtn:active, #solveBtn:active {
-    transform: scale(0.92);
-}
-
-#notesBtn {
-    padding: 8px 16px;
-    background-color: #3D2645;
-    color: #EDE6D6;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    transition: transform 0.1s ease;
-}
-
-#notesBtn:active {
+#undoBtn:active, #restartBtn:active, #checkBtn:active, #hintBtn:active, #solveBtn:active, #notesBtn:active {
     transform: scale(0.92);
 }
 
 #notesBtn.active {
-    background-color: #B8860B;
-    color: #2B2620;
+    background-color: var(--gold);
+    color: var(--ink);
 }
 
 @keyframes fadeInUp {
@@ -307,32 +329,7 @@ h1 {
     font-size: 22px;
     font-weight: bold;
     font-family: 'Cinzel', serif;
-    color: #3D2645;
+    color: var(--primary-dark);
     display: none;
     animation: fadeInUp 0.4s ease;
-}
-#dailyBtn {
-    margin-bottom: 15px;
-    padding: 8px 18px;
-    background-color: #A64B2A;
-    color: #EDE6D6;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-}
-#achievementsList {
-    margin-top: 12px;
-    text-align: right;
-}
-
-.achievement {
-    font-size: 14px;
-    margin: 6px 0;
-    color: #6b5a4a;
-}
-
-.achievement.unlocked {
-    color: #B8860B;
-    font-weight: bold;
 }
