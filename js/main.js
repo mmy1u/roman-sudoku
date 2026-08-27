@@ -115,6 +115,8 @@ function renderBoard() {
             }
 
             cell.addEventListener("click", function() {
+                playClickSound();
+
                 document.querySelectorAll(".cell").forEach(function(c) {
                     c.classList.remove("selected");
                     c.classList.remove("highlighted");
@@ -238,6 +240,7 @@ function updateStatsDisplay() {
 
 function recordWin() {
     clearInterval(timerInterval);
+    playWinSound();
 
     const totalSolved = parseInt(localStorage.getItem("romanSudokuTotalSolved")) || 0;
     localStorage.setItem("romanSudokuTotalSolved", totalSolved + 1);
@@ -246,6 +249,52 @@ function recordWin() {
     const message = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
     document.getElementById("winMessage").textContent = message;
     document.getElementById("winMessage").style.display = "block";
+}
+
+let soundEnabled = true;
+let audioContext = null;
+
+function playTone(frequency, duration) {
+    if (!soundEnabled) {
+        return;
+    }
+
+    if (audioContext === null) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.value = frequency;
+    oscillator.type = "sine";
+
+    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + duration);
+}
+
+function playClickSound() {
+    playTone(400, 0.08);
+}
+
+function playCorrectSound() {
+    playTone(600, 0.15);
+}
+
+function playErrorSound() {
+    playTone(150, 0.2);
+}
+
+function playWinSound() {
+    playTone(500, 0.15);
+    setTimeout(function() { playTone(700, 0.15); }, 150);
+    setTimeout(function() { playTone(900, 0.25); }, 300);
 }
 
 function startTimer() {
@@ -393,8 +442,10 @@ romanNumerals.forEach(function(numeral) {
 
             if (numeral === romanNumerals[correctNumber - 1]) {
                 selectedCell.classList.remove("error");
+                playCorrectSound();
             } else {
                 selectedCell.classList.add("error");
+                playErrorSound();
                 errorCount++;
                 updateErrorDisplay();
             }
@@ -435,6 +486,11 @@ document.getElementById("statsBtn").addEventListener("click", function() {
 
 document.getElementById("closeStatsBtn").addEventListener("click", function() {
     document.getElementById("statsModal").style.display = "none";
+});
+
+document.getElementById("soundBtn").addEventListener("click", function() {
+    soundEnabled = !soundEnabled;
+    document.getElementById("soundBtn").textContent = soundEnabled ? "🔊" : "🔇";
 });
 
 const difficultyButtons = document.querySelectorAll(".diff-btn");
