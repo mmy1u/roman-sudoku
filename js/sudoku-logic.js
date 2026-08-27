@@ -41,18 +41,23 @@ function fillGrid(grid) {
     return true;
 }
 
-function createPuzzle(solvedGrid, cellsToRemove) {
+function createPuzzle(solvedGrid, cellsToRemove, randomFunc) {
+    const rng = randomFunc || Math.random;
     const puzzle = solvedGrid.map(row => row.slice());
+
     let removed = 0;
     while (removed < cellsToRemove) {
-        const row = Math.floor(Math.random() * 9);
-        const col = Math.floor(Math.random() * 9);
+        const row = Math.floor(rng() * 9);
+        const col = Math.floor(rng() * 9);
+
         if (puzzle[row][col] !== 0) {
             puzzle[row][col] = 0;
             removed++;
         }
     }
+
     return puzzle;
+}
 }
 function seededRandom(seed) {
     let value = seed;
