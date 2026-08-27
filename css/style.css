@@ -8,6 +8,16 @@
     --given-bg: #E3D9C4;
 }
 
+body.dark-theme {
+    --bg-color: #1a1a2e;
+    --primary-dark: #0f0f1e;
+    --gold: #e94560;
+    --ink: #EDE6D6;
+    --error-color: #ff6b6b;
+    --cell-bg: #2a2a3e;
+    --given-bg: #16213e;
+}
+
 body {
     background-color: var(--bg-color);
     display: flex;
@@ -128,6 +138,23 @@ h1 {
     z-index: 50;
 }
 
+#themeBtn {
+    position: fixed;
+    top: 15px;
+    left: 65px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 50;
+}
+
 #difficultyButtons {
     display: flex;
     gap: 8px;
@@ -189,7 +216,7 @@ h1 {
 
 .given {
     background-color: var(--given-bg);
-    color: var(--primary-dark);
+    color: var(--gold);
     box-shadow: inset 0 1px 3px rgba(43, 38, 32, 0.4);
 }
 
