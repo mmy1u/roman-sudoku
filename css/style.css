@@ -280,3 +280,8 @@ h1 {
     font-size: 18px;
     z-index: 50;
 }
+.num-btn.completed {
+    background-color: #A89984;
+    opacity: 0.5;
+    pointer-events: none;
+}
