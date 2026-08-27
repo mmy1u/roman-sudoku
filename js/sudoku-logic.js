@@ -70,3 +70,13 @@ function getDailySeed() {
     const now = new Date();
     return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
 }
+function getPreviousDaySeed(seed) {
+    const year = Math.floor(seed / 10000);
+    const month = Math.floor((seed % 10000) / 100);
+    const day = seed % 100;
+
+    const date = new Date(year, month - 1, day);
+    date.setDate(date.getDate() - 1);
+
+    return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+}
