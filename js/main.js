@@ -221,6 +221,33 @@ function saveBestTimeIfNeeded() {
     return false;
 }
 
+function updateStatsDisplay() {
+    const totalSolved = localStorage.getItem("romanSudokuTotalSolved") || 0;
+    document.getElementById("totalSolved").textContent = "🧩 ألغاز محلولة: " + totalSolved;
+
+    const levels = ["easy", "medium", "hard", "expert"];
+    const labels = { easy: "سهل", medium: "متوسط", hard: "صعب", expert: "خبير" };
+    const elementIds = { easy: "bestEasy", medium: "bestMedium", hard: "bestHard", expert: "bestExpert" };
+
+    levels.forEach(function(level) {
+        const saved = localStorage.getItem("romanSudokuBestTime_" + level);
+        const timeText = saved === null ? "--:--" : formatTime(parseInt(saved));
+        document.getElementById(elementIds[level]).textContent = "🏆 " + labels[level] + ": " + timeText;
+    });
+}
+
+function recordWin() {
+    clearInterval(timerInterval);
+
+    const totalSolved = parseInt(localStorage.getItem("romanSudokuTotalSolved")) || 0;
+    localStorage.setItem("romanSudokuTotalSolved", totalSolved + 1);
+
+    const isNewBest = saveBestTimeIfNeeded();
+    const message = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
+    document.getElementById("winMessage").textContent = message;
+    document.getElementById("winMessage").style.display = "block";
+}
+
 function startTimer() {
     clearInterval(timerInterval);
     secondsElapsed = 0;
@@ -320,11 +347,7 @@ function giveHint() {
     selectedCell.classList.remove("error");
 
     if (checkWin()) {
-        clearInterval(timerInterval);
-        const isNewBest = saveBestTimeIfNeeded();
-        const message = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
-        document.getElementById("winMessage").textContent = message;
-        document.getElementById("winMessage").style.display = "block";
+        recordWin();
     }
 }
 
@@ -377,11 +400,7 @@ romanNumerals.forEach(function(numeral) {
             }
 
             if (checkWin()) {
-                clearInterval(timerInterval);
-                const isNewBest = saveBestTimeIfNeeded();
-                const message = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
-                document.getElementById("winMessage").textContent = message;
-                document.getElementById("winMessage").style.display = "block";
+                recordWin();
             }
         }
     });
@@ -407,6 +426,15 @@ document.getElementById("checkBtn").addEventListener("click", function() {
 
 document.getElementById("hintBtn").addEventListener("click", function() {
     giveHint();
+});
+
+document.getElementById("statsBtn").addEventListener("click", function() {
+    updateStatsDisplay();
+    document.getElementById("statsModal").style.display = "flex";
+});
+
+document.getElementById("closeStatsBtn").addEventListener("click", function() {
+    document.getElementById("statsModal").style.display = "none";
 });
 
 const difficultyButtons = document.querySelectorAll(".diff-btn");
