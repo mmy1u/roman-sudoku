@@ -163,6 +163,12 @@ function updateStatsDisplay() {
     const totalSolved = localStorage.getItem("romanSudokuTotalSolved") || 0;
     document.getElementById("totalSolved").textContent = "🧩 ألغاز محلولة: " + totalSolved;
 
+    const streak = localStorage.getItem("romanSudokuStreak") || 0;
+    const totalSolvedEl = document.getElementById("totalSolved");
+    if (totalSolvedEl) {
+        totalSolvedEl.textContent = "🧩 ألغاز محلولة: " + totalSolved + " | 🔥 تتابع: " + streak + " يوم";
+    }
+
     const levels = ["easy", "medium", "hard", "expert"];
     const labels = { easy: "سهل", medium: "متوسط", hard: "صعب", expert: "خبير" };
     const elementIds = { easy: "bestEasy", medium: "bestMedium", hard: "bestHard", expert: "bestExpert" };
@@ -203,9 +209,34 @@ function recordWin() {
     playWinSound();
     const totalSolved = parseInt(localStorage.getItem("romanSudokuTotalSolved")) || 0;
     localStorage.setItem("romanSudokuTotalSolved", totalSolved + 1);
+
+    if (isDailyChallenge) {
+        updateDailyStreak();
+    }
+
     const isNewBest = saveBestTimeIfNeeded();
     document.getElementById("winMessage").textContent = isNewBest ? "🎉 مبروك! رقم قياسي جديد! 🏆" : "🎉 مبروك! حللت اللغز بنجاح!";
     document.getElementById("winMessage").style.display = "block";
+}
+
+function updateDailyStreak() {
+    const today = getDailySeed();
+    const lastPlayedDay = parseInt(localStorage.getItem("romanSudokuLastDailyWin")) || 0;
+    const currentStreak = parseInt(localStorage.getItem("romanSudokuStreak")) || 0;
+
+    if (lastPlayedDay === today) {
+        return;
+    }
+
+    const yesterday = getPreviousDaySeed(today);
+
+    if (lastPlayedDay === yesterday) {
+        localStorage.setItem("romanSudokuStreak", currentStreak + 1);
+    } else {
+        localStorage.setItem("romanSudokuStreak", 1);
+    }
+
+    localStorage.setItem("romanSudokuLastDailyWin", today);
 }
 
 function startTimer() {
@@ -236,6 +267,8 @@ function updateNumberPadState() {
 }
 
 function startNewGame() {
+    isDailyChallenge = false;
+
     sudokuGrid = createEmptyGrid();
     fillGrid(sudokuGrid);
 
@@ -258,6 +291,8 @@ function startNewGame() {
 }
 
 function startDailyChallenge() {
+    isDailyChallenge = true;
+
     const seed = getDailySeed();
     const rng = seededRandom(seed);
 
@@ -370,6 +405,7 @@ let timerInterval;
 let errorCount = 0;
 let moveHistory = [];
 let notesMode = false;
+let isDailyChallenge = false;
 
 romanNumerals.forEach(function(numeral) {
     const btn = document.createElement("div");
