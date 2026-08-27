@@ -18,197 +18,6 @@ h1 {
     text-shadow: 1px 1px 0 #3D2645;
 }
 
-#difficultyButtons {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.diff-btn {
-    padding: 8px 18px;
-    background-color: #3D2645;
-    color: #EDE6D6;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.diff-btn.active {
-    background-color: #B8860B;
-    color: #2B2620;
-}
-
-#stats {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #3D2645;
-    font-family: 'Cinzel', serif;
-}
-
-#board {
-    display: grid;
-    grid-template-columns: repeat(9, 32px);
-    grid-template-rows: repeat(9, 32px);
-    gap: 2px;
-    background-color: #3D2645;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(61, 38, 69, 0.3);
-}
-
-.cell {
-    background-color: #FBF8F2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    font-weight: bold;
-    font-family: 'Cinzel', serif;
-    color: #2B2620;
-    border-radius: 2px;
-}
-
-.given {
-    background-color: #E3D9C4;
-    color: #3D2645;
-    box-shadow: inset 0 1px 3px rgba(43, 38, 32, 0.4);
-}
-
-.editable {
-    background-color: #FBF8F2;
-    cursor: pointer;
-}
-
-.editable:hover {
-    background-color: #F5EFDD;
-}
-
-.selected {
-    background-color: #E8CE8A;
-}
-
-.error {
-    color: #A64B2A !important;
-}
-
-#numberPad {
-    display: flex;
-    gap: 8px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    max-width: 320px;
-}
-
-.num-btn {
-    width: 40px;
-    height: 40px;
-    background-color: #3D2645;
-    color: #EDE6D6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: 'Cinzel', serif;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.num-btn:hover {
-    background-color: #573362;
-}
-
-#newGameBtn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #B8860B;
-    color: #2B2620;
-    font-weight: bold;
-    font-family: 'Cinzel', serif;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-}
-
-#newGameBtn:hover {
-    background-color: #cf9915;
-}
-
-#winMessage {
-    margin-top: 20px;
-    font-size: 22px;
-    font-weight: bold;
-    font-family: 'Cinzel', serif;
-    color: #3D2645;
-    display: none;
-}
-.cell {
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.num-btn, .diff-btn, #newGameBtn {
-    transition: transform 0.1s ease, background-color 0.15s ease;
-}
-
-.num-btn:active, .diff-btn:active, #newGameBtn:active {
-    transform: scale(0.92);
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-#winMessage {
-    animation: fadeInUp 0.4s ease;
-}
-#actionButtons {
-    display: flex;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-#undoBtn, #restartBtn, #checkBtn, #hintBtn {
-    padding: 8px 16px;
-    background-color: #3D2645;
-    color: #EDE6D6;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    transition: transform 0.1s ease;
-}
-
-#undoBtn:active, #restartBtn:active, #checkBtn:active, #hintBtn:active {
-    transform: scale(0.92);
-}
-
-#actionButtons {
-    display: flex;
-    gap: 10px;
-    margin-top: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-.highlighted {
-    background-color: #D4B483 !important;
-}.related {
-    background-color: #F5EAD5;
-}
 #statsBtn {
     margin-bottom: 15px;
     padding: 8px 18px;
@@ -264,6 +73,7 @@ h1 {
     display: inline-block;
     font-family: 'Cinzel', serif;
 }
+
 #soundBtn {
     position: fixed;
     top: 15px;
@@ -280,15 +90,96 @@ h1 {
     font-size: 18px;
     z-index: 50;
 }
-.num-btn.completed {
-    background-color: #A89984;
-    opacity: 0.5;
-    pointer-events: none;
+
+#difficultyButtons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
-#notesBtn.active {
+
+.diff-btn {
+    padding: 8px 18px;
+    background-color: #3D2645;
+    color: #EDE6D6;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.diff-btn.active {
     background-color: #B8860B;
     color: #2B2620;
 }
+
+#stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #3D2645;
+    font-family: 'Cinzel', serif;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(9, 32px);
+    grid-template-rows: repeat(9, 32px);
+    gap: 2px;
+    background-color: #3D2645;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(61, 38, 69, 0.3);
+}
+
+.cell {
+    background-color: #FBF8F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    color: #2B2620;
+    border-radius: 2px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.given {
+    background-color: #E3D9C4;
+    color: #3D2645;
+    box-shadow: inset 0 1px 3px rgba(43, 38, 32, 0.4);
+}
+
+.editable {
+    background-color: #FBF8F2;
+    cursor: pointer;
+}
+
+.editable:hover {
+    background-color: #F5EFDD;
+}
+
+.related {
+    background-color: #F5EAD5;
+}
+
+.selected {
+    background-color: #E8CE8A;
+}
+
+.highlighted {
+    background-color: #D4B483 !important;
+}
+
+.error {
+    color: #A64B2A !important;
+}
+
 .notes-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -304,4 +195,118 @@ h1 {
     font-size: 8px;
     font-weight: normal;
     color: #6b5a4a;
+}
+
+#numberPad {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 320px;
+}
+
+.num-btn {
+    width: 40px;
+    height: 40px;
+    background-color: #3D2645;
+    color: #EDE6D6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.num-btn:hover {
+    background-color: #573362;
+}
+
+.num-btn.completed {
+    background-color: #A89984;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+#newGameBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #B8860B;
+    color: #2B2620;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#newGameBtn:hover {
+    background-color: #cf9915;
+}
+
+#actionButtons {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#undoBtn, #restartBtn, #checkBtn, #hintBtn, #solveBtn {
+    padding: 8px 16px;
+    background-color: #3D2645;
+    color: #EDE6D6;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    transition: transform 0.1s ease;
+}
+
+#undoBtn:active, #restartBtn:active, #checkBtn:active, #hintBtn:active, #solveBtn:active {
+    transform: scale(0.92);
+}
+
+#notesBtn {
+    padding: 8px 16px;
+    background-color: #3D2645;
+    color: #EDE6D6;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    transition: transform 0.1s ease;
+}
+
+#notesBtn:active {
+    transform: scale(0.92);
+}
+
+#notesBtn.active {
+    background-color: #B8860B;
+    color: #2B2620;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#winMessage {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    color: #3D2645;
+    display: none;
+    animation: fadeInUp 0.4s ease;
 }
