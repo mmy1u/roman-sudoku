@@ -312,6 +312,28 @@ function updateErrorDisplay() {
     document.getElementById("errorCount").textContent = "❌ " + errorCount;
 }
 
+function updateNumberPadState() {
+    const allNumBtns = document.querySelectorAll(".num-btn");
+
+    allNumBtns.forEach(function(btn) {
+        const numeral = btn.textContent;
+        const cellsWithThisNumber = document.querySelectorAll(".cell");
+
+        let count = 0;
+        cellsWithThisNumber.forEach(function(cell) {
+            if (cell.textContent === numeral && !cell.classList.contains("error")) {
+                count++;
+            }
+        });
+
+        if (count >= 9) {
+            btn.classList.add("completed");
+        } else {
+            btn.classList.remove("completed");
+        }
+    });
+}
+
 function startNewGame() {
     sudokuGrid = createEmptyGrid();
     fillGrid(sudokuGrid);
@@ -331,6 +353,7 @@ function startNewGame() {
     renderBoard();
     applyBoxBorders();
     startTimer();
+    updateNumberPadState();
 }
 
 function restartPuzzle() {
@@ -346,6 +369,7 @@ function restartPuzzle() {
     renderBoard();
     applyBoxBorders();
     startTimer();
+    updateNumberPadState();
 }
 
 function undoMove() {
@@ -356,6 +380,7 @@ function undoMove() {
     const lastMove = moveHistory.pop();
     lastMove.cell.textContent = lastMove.previousValue;
     lastMove.cell.classList.remove("error");
+    updateNumberPadState();
 }
 
 function checkBoard() {
@@ -376,6 +401,8 @@ function checkBoard() {
             cell.classList.add("error");
         }
     });
+
+    updateNumberPadState();
 }
 
 function giveHint() {
@@ -394,6 +421,8 @@ function giveHint() {
 
     selectedCell.textContent = correctNumeral;
     selectedCell.classList.remove("error");
+
+    updateNumberPadState();
 
     if (checkWin()) {
         recordWin();
@@ -449,6 +478,8 @@ romanNumerals.forEach(function(numeral) {
                 errorCount++;
                 updateErrorDisplay();
             }
+
+            updateNumberPadState();
 
             if (checkWin()) {
                 recordWin();
