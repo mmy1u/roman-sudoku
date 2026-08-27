@@ -1,60 +1,3 @@
-function createEmptyGrid() {
-    const grid = [];
-    for (let row = 0; row < 9; row++) {
-        grid.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    }
-    return grid;
-}
-
-function isValid(grid, row, col, num) {
-    for (let i = 0; i < 9; i++) {
-        if (grid[row][i] === num) return false;
-    }
-    for (let i = 0; i < 9; i++) {
-        if (grid[i][col] === num) return false;
-    }
-    const boxRowStart = Math.floor(row / 3) * 3;
-    const boxColStart = Math.floor(col / 3) * 3;
-    for (let r = 0; r < 3; r++) {
-        for (let c = 0; c < 3; c++) {
-            if (grid[boxRowStart + r][boxColStart + c] === num) return false;
-        }
-    }
-    return true;
-}
-
-function fillGrid(grid) {
-    for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-            if (grid[row][col] === 0) {
-                for (let num = 1; num <= 9; num++) {
-                    if (isValid(grid, row, col, num)) {
-                        grid[row][col] = num;
-                        if (fillGrid(grid)) return true;
-                        grid[row][col] = 0;
-                    }
-                }
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function createPuzzle(solvedGrid, cellsToRemove) {
-    const puzzle = solvedGrid.map(row => row.slice());
-    let removed = 0;
-    while (removed < cellsToRemove) {
-        const row = Math.floor(Math.random() * 9);
-        const col = Math.floor(Math.random() * 9);
-        if (puzzle[row][col] !== 0) {
-            puzzle[row][col] = 0;
-            removed++;
-        }
-    }
-    return puzzle;
-}
-
 function hasFinalAnswer(cell) {
     return cell.children.length === 0 && cell.textContent !== "";
 }
@@ -74,9 +17,7 @@ function checkWin() {
 }
 
 function toggleNote(cell, numeral) {
-    if (hasFinalAnswer(cell)) {
-        return;
-    }
+    if (hasFinalAnswer(cell)) return;
 
     let notesGrid = cell.querySelector(".notes-grid");
     if (notesGrid === null) {
@@ -237,35 +178,6 @@ function recordWin() {
     document.getElementById("winMessage").style.display = "block";
 }
 
-let soundEnabled = true;
-let audioContext = null;
-
-function playTone(frequency, duration) {
-    if (!soundEnabled) return;
-    if (audioContext === null) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    oscillator.frequency.value = frequency;
-    oscillator.type = "sine";
-    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + duration);
-}
-
-function playClickSound() { playTone(400, 0.08); }
-function playCorrectSound() { playTone(600, 0.15); }
-function playErrorSound() { playTone(150, 0.2); }
-function playWinSound() {
-    playTone(500, 0.15);
-    setTimeout(function() { playTone(700, 0.15); }, 150);
-    setTimeout(function() { playTone(900, 0.25); }, 300);
-}
-
 function startTimer() {
     clearInterval(timerInterval);
     secondsElapsed = 0;
@@ -341,9 +253,7 @@ function undoMove() {
 
 function checkBoard() {
     document.querySelectorAll(".editable").forEach(function(cell) {
-        if (!hasFinalAnswer(cell)) {
-            return;
-        }
+        if (!hasFinalAnswer(cell)) return;
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
         const correctNumeral = romanNumerals[sudokuGrid[row][col] - 1];
