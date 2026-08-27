@@ -449,3 +449,14 @@ difficultyButtons.forEach(function(btn) {
 });
 
 startNewGame();
+document.getElementById("themeBtn").addEventListener("click", function() {
+    document.body.classList.toggle("dark-theme");
+    const isDark = document.body.classList.contains("dark-theme");
+    document.getElementById("themeBtn").textContent = isDark ? "☀️" : "🌙";
+    localStorage.setItem("romanSudokuDarkTheme", isDark);
+});
+
+if (localStorage.getItem("romanSudokuDarkTheme") === "true") {
+    document.body.classList.add("dark-theme");
+    document.getElementById("themeBtn").textContent = "☀️";
+}
