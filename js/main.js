@@ -399,3 +399,26 @@ difficultyButtons.forEach(function(btn) {
 });
 
 startNewGame();
+function startDailyChallenge() {
+    const seed = getDailySeed();
+    const rng = seededRandom(seed);
+
+    sudokuGrid = createEmptyGrid();
+    fillGrid(sudokuGrid);
+
+    puzzleGrid = createPuzzle(sudokuGrid, 40, rng);
+    originalPuzzleGrid = puzzleGrid.map(row => row.slice());
+
+    selectedCell = null;
+    errorCount = 0;
+    moveHistory = [];
+    updateErrorDisplay();
+
+    document.getElementById("bestTime").textContent = "🏆 --:--";
+    document.getElementById("winMessage").style.display = "none";
+
+    renderBoard();
+    applyBoxBorders();
+    startTimer();
+    updateNumberPadState();
+}
