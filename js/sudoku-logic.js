@@ -54,3 +54,15 @@ function createPuzzle(solvedGrid, cellsToRemove) {
     }
     return puzzle;
 }
+function seededRandom(seed) {
+    let value = seed;
+    return function() {
+        value = (value * 9301 + 49297) % 233280;
+        return value / 233280;
+    };
+}
+
+function getDailySeed() {
+    const now = new Date();
+    return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+}
