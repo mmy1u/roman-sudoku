@@ -502,5 +502,14 @@ difficultyButtons.forEach(function(btn) {
         startNewGame();
     });
 });
-
+document.getElementById("guestBtn").addEventListener("click", function() {
+    window.firebaseSignInAnonymously()
+        .then(function() {
+            console.log("Guest login successful");
+        })
+        .catch(function(error) {
+            console.error("Guest login error:", error);
+            alert("حدث خطأ، حاول مرة أخرى");
+        });
+});
 startNewGame();
