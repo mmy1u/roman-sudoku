@@ -7,13 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-  <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <h1>Roman Sudoku</h1>
-<div id="statsBtn">📊 إحصائياتي</div>
-<div id="soundBtn">🔊</div>
-<div id="themeBtn">🌙</div>
+    <div id="soundBtn">🔊</div>
+    <div id="themeBtn">🌙</div>
+    <div id="statsBtn">📊 إحصائياتي</div>
     <div id="statsModal">
         <div id="statsContent">
             <h2>إحصائياتي</h2>
@@ -21,13 +21,13 @@
             <p id="bestEasy"></p>
             <p id="bestMedium"></p>
             <p id="bestHard"></p>
-       <p id="bestExpert"></p>
-<div id="achievementsList"></div>
-<div id="closeStatsBtn">إغلاق ✕</div>
+            <p id="bestExpert"></p>
+            <div id="achievementsList"></div>
+            <div id="closeStatsBtn">إغلاق ✕</div>
         </div>
     </div>
+    <div id="dailyBtn">📅 تحدي اليوم</div>
     <div id="difficultyButtons">
-      <div id="dailyBtn">📅 تحدي اليوم</div>
         <div class="diff-btn" data-level="easy">سهل</div>
         <div class="diff-btn" data-level="medium">متوسط</div>
         <div class="diff-btn" data-level="hard">صعب</div>
@@ -41,17 +41,37 @@
     <div id="board"></div>
     <div id="numberPad"></div>
     <div id="newGameBtn">لغز جديد 🔄</div>
-<div id="actionButtons">
-    <div id="undoBtn">↩️ تراجع</div>
-    <div id="restartBtn">🔁 إعادة</div>
-    <div id="checkBtn">✓ تحقق</div>
-    <div id="hintBtn">💡 تلميح</div>
-    <div id="notesBtn">✏️ ملاحظات</div>
-    <div id="solveBtn">🔓 عرض الحل</div>
-</div>
+    <div id="actionButtons">
+        <div id="undoBtn">↩️ تراجع</div>
+        <div id="restartBtn">🔁 إعادة</div>
+        <div id="checkBtn">✓ تحقق</div>
+        <div id="hintBtn">💡 تلميح</div>
+        <div id="notesBtn">✏️ ملاحظات</div>
+        <div id="solveBtn">🔓 عرض الحل</div>
+    </div>
     <div id="winMessage"></div>
-<script src="js/sudoku-logic.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
+            authDomain: "roman-sudoku-32232.firebaseapp.com",
+            projectId: "roman-sudoku-32232",
+            storageBucket: "roman-sudoku-32232.firebasestorage.app",
+            messagingSenderId: "754569598290",
+            appId: "1:754569598290:web:74829f667670a6194ad68b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.firebaseAuth = auth;
+    </script>
+
+    <script src="js/sudoku-logic.js"></script>
     <script src="js/audio.js"></script>
     <script src="js/main.js"></script>
 </body>
-</html>
+  </html>
