@@ -79,9 +79,10 @@
     </div>
     <div id="winMessage"></div>
 
-    <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
@@ -94,6 +95,7 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const googleProvider = new GoogleAuthProvider();
 
     window.firebaseAuth = auth;
@@ -118,15 +120,37 @@
         return signOut(auth);
     };
 
+    window.firebaseCreatePlayerProfile = function(uid, data) {
+        return setDoc(doc(db, "players", uid), data);
+    };
+
+    window.firebaseGetPlayerProfile = function(uid) {
+        return getDoc(doc(db, "players", uid));
+    };
+
     onAuthStateChanged(auth, function(user) {
         if (user) {
             document.getElementById("authScreen").style.display = "none";
             console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
+
+            window.firebaseGetPlayerProfile(user.uid).then(function(docSnap) {
+                if (!docSnap.exists()) {
+                    window.firebaseCreatePlayerProfile(user.uid, {
+                        email: user.email || null,
+                        isAnonymous: user.isAnonymous,
+                        createdAt: serverTimestamp()
+                    }).then(function() {
+                        console.log("New player profile created in Firestore");
+                    });
+                } else {
+                    console.log("Existing player profile:", docSnap.data());
+                }
+            });
         } else {
             document.getElementById("authScreen").style.display = "flex";
         }
     });
-      </script>
+</script>
 
     <script src="js/sudoku-logic.js"></script>
     <script src="js/audio.js"></script>
