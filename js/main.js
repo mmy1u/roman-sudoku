@@ -587,7 +587,7 @@ function translateFirebaseError(code) {
     return messages[code] || "حدث خطأ، حاول مرة أخرى";
 }
 document.getElementById("logoutBtn").addEventListener("click", function() {
-    const confirmed = confirm("متأكد تبي تسجل خروج؟");
+    const confirmed = confirm("متأكد تريد تسجل الخروج؟");
     if (confirmed) {
         window.firebaseSignOut();
     }
