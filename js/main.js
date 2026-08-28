@@ -524,5 +524,66 @@ difficultyButtons.forEach(function(btn) {
         startNewGame();
     });
 });
+document.getElementById("showSignupBtn").addEventListener("click", function() {
+    document.getElementById("authButtons").style.display = "none";
+    document.getElementById("signupForm").style.display = "flex";
+});
 
+document.getElementById("showLoginBtn").addEventListener("click", function() {
+    document.getElementById("authButtons").style.display = "none";
+    document.getElementById("loginForm").style.display = "flex";
+});
+
+document.getElementById("signupBackBtn").addEventListener("click", function() {
+    document.getElementById("signupForm").style.display = "none";
+    document.getElementById("authButtons").style.display = "flex";
+});
+
+document.getElementById("loginBackBtn").addEventListener("click", function() {
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("authButtons").style.display = "flex";
+});
+
+document.getElementById("signupSubmitBtn").addEventListener("click", function() {
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
+    const errorEl = document.getElementById("signupError");
+
+    errorEl.textContent = "";
+
+    window.firebaseSignUp(email, password)
+        .then(function() {
+            console.log("Account created");
+        })
+        .catch(function(error) {
+            errorEl.textContent = translateFirebaseError(error.code);
+        });
+});
+
+document.getElementById("loginSubmitBtn").addEventListener("click", function() {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    const errorEl = document.getElementById("loginError");
+
+    errorEl.textContent = "";
+
+    window.firebaseSignIn(email, password)
+        .then(function() {
+            console.log("Login successful");
+        })
+        .catch(function(error) {
+            errorEl.textContent = translateFirebaseError(error.code);
+        });
+});
+
+function translateFirebaseError(code) {
+    const messages = {
+        "auth/email-already-in-use": "هذا البريد الإلكتروني مستخدم من قبل",
+        "auth/invalid-email": "صيغة البريد الإلكتروني غير صحيحة",
+        "auth/weak-password": "كلمة المرور ضعيفة، استخدم 6 أحرف على الأقل",
+        "auth/invalid-credential": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "auth/missing-password": "الرجاء إدخال كلمة المرور"
+    };
+    return messages[code] || "حدث خطأ، حاول مرة أخرى";
+}
 startNewGame();
