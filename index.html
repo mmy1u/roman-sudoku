@@ -10,15 +10,32 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div id="authScreen">
-        <h1 class="auth-title">Roman Sudoku</h1>
-        <div id="authButtons">
-            <div id="showSignupBtn" class="auth-btn">إنشاء حساب</div>
-            <div id="showLoginBtn" class="auth-btn">تسجيل الدخول</div>
-            <div id="googleLoginBtn" class="auth-btn google">تسجيل الدخول بواسطة Google</div>
-            <div id="guestBtn" class="auth-btn guest">اللعب كضيف</div>
-        </div>
+ <div id="authScreen">
+    <h1 class="auth-title">Roman Sudoku</h1>
+
+    <div id="authButtons">
+        <div id="showSignupBtn" class="auth-btn">إنشاء حساب</div>
+        <div id="showLoginBtn" class="auth-btn">تسجيل الدخول</div>
+        <div id="googleLoginBtn" class="auth-btn google">تسجيل الدخول بواسطة Google</div>
+        <div id="guestBtn" class="auth-btn guest">اللعب كضيف</div>
     </div>
+
+    <div id="signupForm" class="auth-form">
+        <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" class="auth-input">
+        <input type="password" id="signupPassword" placeholder="كلمة المرور (6 أحرف على الأقل)" class="auth-input">
+        <div id="signupSubmitBtn" class="auth-btn">إنشاء الحساب</div>
+        <div id="signupBackBtn" class="auth-btn guest">رجوع</div>
+        <p id="signupError" class="auth-error"></p>
+    </div>
+
+    <div id="loginForm" class="auth-form">
+        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="auth-input">
+        <input type="password" id="loginPassword" placeholder="كلمة المرور" class="auth-input">
+        <div id="loginSubmitBtn" class="auth-btn">تسجيل الدخول</div>
+        <div id="loginBackBtn" class="auth-btn guest">رجوع</div>
+        <p id="loginError" class="auth-error"></p>
+    </div>
+</div>
 
     <h1>Roman Sudoku</h1>
     <div id="soundBtn">🔊</div>
