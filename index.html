@@ -80,7 +80,7 @@
 
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
@@ -111,6 +111,10 @@
 
     window.firebaseSignIn = function(email, password) {
         return signInWithEmailAndPassword(auth, email, password);
+    };
+
+    window.firebaseSignOut = function() {
+        return signOut(auth);
     };
 
     onAuthStateChanged(auth, function(user) {
