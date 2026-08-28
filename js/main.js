@@ -490,6 +490,28 @@ if (localStorage.getItem("romanSudokuDarkTheme") === "true") {
     document.getElementById("themeBtn").textContent = "☀️";
 }
 
+document.getElementById("guestBtn").addEventListener("click", function() {
+    window.firebaseSignInAnonymously()
+        .then(function() {
+            console.log("Guest login successful");
+        })
+        .catch(function(error) {
+            console.error("Guest login error:", error);
+            alert("حدث خطأ، حاول مرة أخرى");
+        });
+});
+
+document.getElementById("googleLoginBtn").addEventListener("click", function() {
+    window.firebaseSignInWithGoogle()
+        .then(function() {
+            console.log("Google login successful");
+        })
+        .catch(function(error) {
+            console.error("Google login error:", error);
+            alert("حدث خطأ بتسجيل الدخول، حاول مرة أخرى");
+        });
+});
+
 const difficultyButtons = document.querySelectorAll(".diff-btn");
 difficultyButtons.forEach(function(btn) {
     if (btn.dataset.level === currentDifficulty) {
@@ -502,14 +524,5 @@ difficultyButtons.forEach(function(btn) {
         startNewGame();
     });
 });
-document.getElementById("guestBtn").addEventListener("click", function() {
-    window.firebaseSignInAnonymously()
-        .then(function() {
-            console.log("Guest login successful");
-        })
-        .catch(function(error) {
-            console.error("Guest login error:", error);
-            alert("حدث خطأ، حاول مرة أخرى");
-        });
-});
+
 startNewGame();
