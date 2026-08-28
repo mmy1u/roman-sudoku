@@ -63,7 +63,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
@@ -78,6 +78,18 @@
         const auth = getAuth(app);
 
         window.firebaseAuth = auth;
+        window.firebaseSignInAnonymously = function() {
+            return signInAnonymously(auth);
+        };
+
+        onAuthStateChanged(auth, function(user) {
+            if (user) {
+                document.getElementById("authScreen").style.display = "none";
+                console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
+            } else {
+                document.getElementById("authScreen").style.display = "flex";
+            }
+        });
     </script>
 
     <script src="js/sudoku-logic.js"></script>
