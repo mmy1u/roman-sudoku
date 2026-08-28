@@ -79,41 +79,49 @@
     <div id="winMessage"></div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
-            authDomain: "roman-sudoku-32232.firebaseapp.com",
-            projectId: "roman-sudoku-32232",
-            storageBucket: "roman-sudoku-32232.firebasestorage.app",
-            messagingSenderId: "754569598290",
-            appId: "1:754569598290:web:74829f667670a6194ad68b"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
+        authDomain: "roman-sudoku-32232.firebaseapp.com",
+        projectId: "roman-sudoku-32232",
+        storageBucket: "roman-sudoku-32232.firebasestorage.app",
+        messagingSenderId: "754569598290",
+        appId: "1:754569598290:web:74829f667670a6194ad68b"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const googleProvider = new GoogleAuthProvider();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
 
-        window.firebaseAuth = auth;
+    window.firebaseAuth = auth;
 
-        window.firebaseSignInAnonymously = function() {
-            return signInAnonymously(auth);
-        };
+    window.firebaseSignInAnonymously = function() {
+        return signInAnonymously(auth);
+    };
 
-        window.firebaseSignInWithGoogle = function() {
-            return signInWithPopup(auth, googleProvider);
-        };
+    window.firebaseSignInWithGoogle = function() {
+        return signInWithPopup(auth, googleProvider);
+    };
 
-        onAuthStateChanged(auth, function(user) {
-            if (user) {
-                document.getElementById("authScreen").style.display = "none";
-                console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
-            } else {
-                document.getElementById("authScreen").style.display = "flex";
-            }
-        });
-    </script>
+    window.firebaseSignUp = function(email, password) {
+        return createUserWithEmailAndPassword(auth, email, password);
+    };
+
+    window.firebaseSignIn = function(email, password) {
+        return signInWithEmailAndPassword(auth, email, password);
+    };
+
+    onAuthStateChanged(auth, function(user) {
+        if (user) {
+            document.getElementById("authScreen").style.display = "none";
+            console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
+        } else {
+            document.getElementById("authScreen").style.display = "flex";
+        }
+    });
+      </script>
 
     <script src="js/sudoku-logic.js"></script>
     <script src="js/audio.js"></script>
