@@ -63,7 +63,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
@@ -76,10 +76,16 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
 
         window.firebaseAuth = auth;
+
         window.firebaseSignInAnonymously = function() {
             return signInAnonymously(auth);
+        };
+
+        window.firebaseSignInWithGoogle = function() {
+            return signInWithPopup(auth, googleProvider);
         };
 
         onAuthStateChanged(auth, function(user) {
