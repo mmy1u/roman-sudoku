@@ -413,3 +413,27 @@ h1 {
     border: 2px solid var(--gold);
     color: var(--gold);
 }
+.auth-form {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+    width: 80%;
+    max-width: 300px;
+}
+
+.auth-input {
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    background-color: #ffffff;
+    color: #2B2620;
+}
+
+.auth-error {
+    color: #ff6b6b;
+    font-size: 14px;
+    text-align: center;
+    min-height: 20px;
+}
