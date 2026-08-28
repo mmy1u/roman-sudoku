@@ -586,4 +586,10 @@ function translateFirebaseError(code) {
     };
     return messages[code] || "حدث خطأ، حاول مرة أخرى";
 }
+document.getElementById("logoutBtn").addEventListener("click", function() {
+    const confirmed = confirm("متأكد تبي تسجل خروج؟");
+    if (confirmed) {
+        window.firebaseSignOut();
+    }
+});
 startNewGame();
