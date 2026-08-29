@@ -592,7 +592,7 @@ document.getElementById("logoutBtn").addEventListener("click", function() {
         window.firebaseSignOut();
     }
 });
-startNewGame();
+
 function isValidUsername(username) {
     if (username.length < 4) {
         return "يجب أن يكون 4 أحرف على الأقل";
@@ -648,3 +648,4 @@ document.getElementById("usernameSubmitBtn").addEventListener("click", function(
         });
     });
 });
+startNewGame();
