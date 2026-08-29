@@ -10,37 +10,48 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
- <div id="authScreen">
-    <h1 class="auth-title">Roman Sudoku</h1>
+    <div id="authScreen">
+        <h1 class="auth-title">Roman Sudoku</h1>
 
-    <div id="authButtons">
-        <div id="showSignupBtn" class="auth-btn">إنشاء حساب</div>
-        <div id="showLoginBtn" class="auth-btn">تسجيل الدخول</div>
-        <div id="googleLoginBtn" class="auth-btn google">تسجيل الدخول بواسطة Google</div>
-        <div id="guestBtn" class="auth-btn guest">اللعب كضيف</div>
+        <div id="authButtons">
+            <div id="showSignupBtn" class="auth-btn">إنشاء حساب</div>
+            <div id="showLoginBtn" class="auth-btn">تسجيل الدخول</div>
+            <div id="googleLoginBtn" class="auth-btn google">تسجيل الدخول بواسطة Google</div>
+            <div id="guestBtn" class="auth-btn guest">اللعب كضيف</div>
+        </div>
+
+        <div id="signupForm" class="auth-form">
+            <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" class="auth-input">
+            <input type="password" id="signupPassword" placeholder="كلمة المرور (6 أحرف على الأقل)" class="auth-input">
+            <div id="signupSubmitBtn" class="auth-btn">إنشاء الحساب</div>
+            <div id="signupBackBtn" class="auth-btn guest">رجوع</div>
+            <p id="signupError" class="auth-error"></p>
+        </div>
+
+        <div id="loginForm" class="auth-form">
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="auth-input">
+            <input type="password" id="loginPassword" placeholder="كلمة المرور" class="auth-input">
+            <div id="loginSubmitBtn" class="auth-btn">تسجيل الدخول</div>
+            <div id="loginBackBtn" class="auth-btn guest">رجوع</div>
+            <p id="loginError" class="auth-error"></p>
+        </div>
     </div>
 
-    <div id="signupForm" class="auth-form">
-        <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" class="auth-input">
-        <input type="password" id="signupPassword" placeholder="كلمة المرور (6 أحرف على الأقل)" class="auth-input">
-        <div id="signupSubmitBtn" class="auth-btn">إنشاء الحساب</div>
-        <div id="signupBackBtn" class="auth-btn guest">رجوع</div>
-        <p id="signupError" class="auth-error"></p>
+    <div id="usernameScreen">
+        <h1 class="auth-title">اختر اسم المستخدم</h1>
+        <div class="auth-form" style="display: flex;">
+            <input type="text" id="usernameInput" placeholder="username" class="auth-input" maxlength="20">
+            <p id="usernameHint" class="auth-hint">4 أحرف على الأقل: a-z, 0-9, . _</p>
+            <p id="usernameError" class="auth-error"></p>
+            <div id="usernameSubmitBtn" class="auth-btn">تأكيد</div>
+        </div>
     </div>
-
-    <div id="loginForm" class="auth-form">
-        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="auth-input">
-        <input type="password" id="loginPassword" placeholder="كلمة المرور" class="auth-input">
-        <div id="loginSubmitBtn" class="auth-btn">تسجيل الدخول</div>
-        <div id="loginBackBtn" class="auth-btn guest">رجوع</div>
-        <p id="loginError" class="auth-error"></p>
-    </div>
-</div>
 
     <h1>Roman Sudoku</h1>
     <div id="soundBtn">🔊</div>
     <div id="themeBtn">🌙</div>
-  <div id="logoutBtn">🚪</div>
+    <div id="logoutBtn">🚪</div>
+
     <div id="statsBtn">📊 إحصائياتي</div>
     <div id="statsModal">
         <div id="statsContent">
@@ -54,24 +65,26 @@
             <div id="closeStatsBtn">إغلاق ✕</div>
         </div>
     </div>
-  <div id="profileBtn">👤 ملفي</div>
-<div id="profileModal">
-    <div id="profileContent">
-        <h2>الملف الشخصي</h2>
-        <p id="profileUsername"></p>
-        <p id="profileJoinDate"></p>
 
-        <label class="profile-label">الدولة</label>
-        <select id="countrySelect" class="auth-input"></select>
+    <div id="profileBtn">👤 ملفي</div>
+    <div id="profileModal">
+        <div id="profileContent">
+            <h2>الملف الشخصي</h2>
+            <p id="profileUsername"></p>
+            <p id="profileJoinDate"></p>
 
-        <label class="profile-label">نبذة عني</label>
-        <textarea id="bioInput" class="auth-input" maxlength="120" rows="3"></textarea>
+            <label class="profile-label">الدولة</label>
+            <select id="countrySelect" class="auth-input"></select>
 
-        <div id="saveProfileBtn" class="auth-btn">حفظ</div>
-        <div id="closeProfileBtn" class="auth-btn guest">إغلاق</div>
-        <p id="profileSaveMsg" class="auth-hint"></p>
+            <label class="profile-label">نبذة عني</label>
+            <textarea id="bioInput" class="auth-input" maxlength="120" rows="3"></textarea>
+
+            <div id="saveProfileBtn" class="auth-btn">حفظ</div>
+            <div id="closeProfileBtn" class="auth-btn guest">إغلاق</div>
+            <p id="profileSaveMsg" class="auth-hint"></p>
+        </div>
     </div>
-</div>
+
     <div id="dailyBtn">📅 تحدي اليوم</div>
     <div id="difficultyButtons">
         <div class="diff-btn" data-level="easy">سهل</div>
@@ -96,108 +109,103 @@
         <div id="solveBtn">🔓 عرض الحل</div>
     </div>
     <div id="winMessage"></div>
-<div id="usernameScreen">
-    <h1 class="auth-title">اختر اسم المستخدم</h1>
-    <div class="auth-form" style="display: flex;">
-        <input type="text" id="usernameInput" placeholder="username" class="auth-input" maxlength="20">
-        <p id="usernameHint" class="auth-hint">4 أحرف على الأقل: a-z, 0-9, . _</p>
-        <p id="usernameError" class="auth-error"></p>
-        <div id="usernameSubmitBtn" class="auth-btn">تأكيد</div>
-    </div>
-</div>
-  
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
-        authDomain: "roman-sudoku-32232.firebaseapp.com",
-        projectId: "roman-sudoku-32232",
-        storageBucket: "roman-sudoku-32232.firebasestorage.app",
-        messagingSenderId: "754569598290",
-        appId: "1:754569598290:web:74829f667670a6194ad68b"
-    };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const googleProvider = new GoogleAuthProvider();
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
+            authDomain: "roman-sudoku-32232.firebaseapp.com",
+            projectId: "roman-sudoku-32232",
+            storageBucket: "roman-sudoku-32232.firebasestorage.app",
+            messagingSenderId: "754569598290",
+            appId: "1:754569598290:web:74829f667670a6194ad68b"
+        };
 
-    window.firebaseAuth = auth;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
 
-    window.firebaseSignInAnonymously = function() {
-        return signInAnonymously(auth);
-    };
+        window.firebaseAuth = auth;
 
-    window.firebaseSignInWithGoogle = function() {
-        return signInWithPopup(auth, googleProvider);
-    };
+        window.firebaseSignInAnonymously = function() {
+            return signInAnonymously(auth);
+        };
 
-    window.firebaseSignUp = function(email, password) {
-        return createUserWithEmailAndPassword(auth, email, password);
-    };
+        window.firebaseSignInWithGoogle = function() {
+            return signInWithPopup(auth, googleProvider);
+        };
 
-    window.firebaseSignIn = function(email, password) {
-        return signInWithEmailAndPassword(auth, email, password);
-    };
+        window.firebaseSignUp = function(email, password) {
+            return createUserWithEmailAndPassword(auth, email, password);
+        };
 
-    window.firebaseSignOut = function() {
-        return signOut(auth);
-    };
+        window.firebaseSignIn = function(email, password) {
+            return signInWithEmailAndPassword(auth, email, password);
+        };
 
-    window.firebaseCreatePlayerProfile = function(uid, data) {
-        return setDoc(doc(db, "players", uid), data);
-    };
+        window.firebaseSignOut = function() {
+            return signOut(auth);
+        };
 
-    window.firebaseGetPlayerProfile = function(uid) {
-        return getDoc(doc(db, "players", uid));
-    };
+        window.firebaseCreatePlayerProfile = function(uid, data) {
+            return setDoc(doc(db, "players", uid), data);
+        };
 
-    window.firebaseCheckUsernameTaken = function(username) {
-        return getDoc(doc(db, "usernames", username));
-    };
+        window.firebaseSaveProfile = function(uid, data) {
+            return setDoc(doc(db, "players", uid), data, { merge: true });
+        };
 
-    window.firebaseSaveUsername = function(uid, username) {
-        return setDoc(doc(db, "usernames", username), { uid: uid }).then(function() {
-            return setDoc(doc(db, "players", uid), { username: username }, { merge: true });
-        });
-    };
+        window.firebaseGetPlayerProfile = function(uid) {
+            return getDoc(doc(db, "players", uid));
+        };
 
-    window.firebaseCurrentUser = function() {
-        return auth.currentUser;
-    };
+        window.firebaseCheckUsernameTaken = function(username) {
+            return getDoc(doc(db, "usernames", username));
+        };
 
-    onAuthStateChanged(auth, function(user) {
-        if (user) {
-            document.getElementById("authScreen").style.display = "none";
-            console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
-
-            window.firebaseGetPlayerProfile(user.uid).then(function(docSnap) {
-                if (!docSnap.exists()) {
-                    window.firebaseCreatePlayerProfile(user.uid, {
-                        email: user.email || null,
-                        isAnonymous: user.isAnonymous,
-                        createdAt: serverTimestamp()
-                    }).then(function() {
-                        console.log("New player profile created in Firestore");
-                        document.getElementById("usernameScreen").style.display = "flex";
-                    });
-                } else {
-                    console.log("Existing player profile:", docSnap.data());
-                    if (!docSnap.data().username) {
-                        document.getElementById("usernameScreen").style.display = "flex";
-                    } else {
-                        document.getElementById("usernameScreen").style.display = "none";
-                    }
-                }
+        window.firebaseSaveUsername = function(uid, username) {
+            return setDoc(doc(db, "usernames", username), { uid: uid }).then(function() {
+                return setDoc(doc(db, "players", uid), { username: username }, { merge: true });
             });
-        } else {
-            document.getElementById("authScreen").style.display = "flex";
-        }
-    });
-      </script>
+        };
+
+        window.firebaseCurrentUser = function() {
+            return auth.currentUser;
+        };
+
+        onAuthStateChanged(auth, function(user) {
+            if (user) {
+                document.getElementById("authScreen").style.display = "none";
+                console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
+
+                window.firebaseGetPlayerProfile(user.uid).then(function(docSnap) {
+                    if (!docSnap.exists()) {
+                        window.firebaseCreatePlayerProfile(user.uid, {
+                            email: user.email || null,
+                            isAnonymous: user.isAnonymous,
+                            createdAt: serverTimestamp()
+                        }).then(function() {
+                            console.log("New player profile created in Firestore");
+                            document.getElementById("usernameScreen").style.display = "flex";
+                        });
+                    } else {
+                        console.log("Existing player profile:", docSnap.data());
+                        if (!docSnap.data().username) {
+                            document.getElementById("usernameScreen").style.display = "flex";
+                        } else {
+                            document.getElementById("usernameScreen").style.display = "none";
+                        }
+                    }
+                });
+            } else {
+                document.getElementById("authScreen").style.display = "flex";
+            }
+        });
+    </script>
 
     <script src="js/sudoku-logic.js"></script>
     <script src="js/audio.js"></script>
