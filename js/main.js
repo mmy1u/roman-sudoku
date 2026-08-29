@@ -456,6 +456,32 @@ function populateCountrySelect() {
     });
 }
 
+const avatarOptions = ["🧙", "⚔️", "🏛️", "👑", "🦅", "🛡️", "🎭", "🏺", "🔱", "⚡"];
+let selectedAvatar = "🧙";
+
+function populateAvatarGrid() {
+    const grid = document.getElementById("avatarGrid");
+    grid.innerHTML = "";
+
+    avatarOptions.forEach(function(avatar) {
+        const option = document.createElement("div");
+        option.classList.add("avatar-option");
+        option.textContent = avatar;
+        option.dataset.avatar = avatar;
+
+        option.addEventListener("click", function() {
+            document.querySelectorAll(".avatar-option").forEach(function(el) {
+                el.classList.remove("selected");
+            });
+            option.classList.add("selected");
+            document.getElementById("avatarDisplay").textContent = avatar;
+            selectedAvatar = avatar;
+        });
+
+        grid.appendChild(option);
+    });
+}
+
 function openProfile() {
     const user = window.firebaseCurrentUser();
     if (!user) return;
@@ -472,6 +498,12 @@ function openProfile() {
             const year = date.getFullYear();
             document.getElementById("profileJoinDate").textContent = "📅 عضو منذ: " + day + "/" + month + "/" + year;
         }
+
+        selectedAvatar = data.avatar || "🧙";
+        document.getElementById("avatarDisplay").textContent = selectedAvatar;
+        document.querySelectorAll(".avatar-option").forEach(function(el) {
+            el.classList.toggle("selected", el.dataset.avatar === selectedAvatar);
+        });
 
         document.getElementById("countrySelect").value = data.country || "SA";
         document.getElementById("bioInput").value = data.bio || "";
@@ -715,7 +747,7 @@ document.getElementById("saveProfileBtn").addEventListener("click", function() {
     const country = document.getElementById("countrySelect").value;
     const bio = document.getElementById("bioInput").value.trim();
 
-    window.firebaseSaveProfile(user.uid, { country: country, bio: bio })
+    window.firebaseSaveProfile(user.uid, { country: country, bio: bio, avatar: selectedAvatar })
         .then(function() {
             document.getElementById("profileSaveMsg").textContent = "✅ تم الحفظ بنجاح";
         })
@@ -726,6 +758,7 @@ document.getElementById("saveProfileBtn").addEventListener("click", function() {
 });
 
 populateCountrySelect();
+populateAvatarGrid();
 
 const difficultyButtons = document.querySelectorAll(".diff-btn");
 difficultyButtons.forEach(function(btn) {
