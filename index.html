@@ -78,7 +78,16 @@
         <div id="solveBtn">🔓 عرض الحل</div>
     </div>
     <div id="winMessage"></div>
-
+<div id="usernameScreen">
+    <h1 class="auth-title">اختر اسم المستخدم</h1>
+    <div class="auth-form" style="display: flex;">
+        <input type="text" id="usernameInput" placeholder="username" class="auth-input" maxlength="20">
+        <p id="usernameHint" class="auth-hint">4 أحرف على الأقل: a-z, 0-9, . _</p>
+        <p id="usernameError" class="auth-error"></p>
+        <div id="usernameSubmitBtn" class="auth-btn">تأكيد</div>
+    </div>
+</div>
+  
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
