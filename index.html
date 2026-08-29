@@ -137,6 +137,20 @@
         return getDoc(doc(db, "players", uid));
     };
 
+    window.firebaseCheckUsernameTaken = function(username) {
+        return getDoc(doc(db, "usernames", username));
+    };
+
+    window.firebaseSaveUsername = function(uid, username) {
+        return setDoc(doc(db, "usernames", username), { uid: uid }).then(function() {
+            return setDoc(doc(db, "players", uid), { username: username }, { merge: true });
+        });
+    };
+
+    window.firebaseCurrentUser = function() {
+        return auth.currentUser;
+    };
+
     onAuthStateChanged(auth, function(user) {
         if (user) {
             document.getElementById("authScreen").style.display = "none";
@@ -150,16 +164,22 @@
                         createdAt: serverTimestamp()
                     }).then(function() {
                         console.log("New player profile created in Firestore");
+                        document.getElementById("usernameScreen").style.display = "flex";
                     });
                 } else {
                     console.log("Existing player profile:", docSnap.data());
+                    if (!docSnap.data().username) {
+                        document.getElementById("usernameScreen").style.display = "flex";
+                    } else {
+                        document.getElementById("usernameScreen").style.display = "none";
+                    }
                 }
             });
         } else {
             document.getElementById("authScreen").style.display = "flex";
         }
     });
-</script>
+      </script>
 
     <script src="js/sudoku-logic.js"></script>
     <script src="js/audio.js"></script>
