@@ -593,3 +593,58 @@ document.getElementById("logoutBtn").addEventListener("click", function() {
     }
 });
 startNewGame();
+function isValidUsername(username) {
+    if (username.length < 4) {
+        return "يجب أن يكون 4 أحرف على الأقل";
+    }
+
+    const allowedPattern = /^[a-z0-9._]+$/;
+    if (!allowedPattern.test(username)) {
+        return "يُسمح فقط بحروف إنجليزية صغيرة وأرقام ونقطة وشرطة سفلية";
+    }
+
+    if (username.startsWith(".")) {
+        return "لا يمكن أن يبدأ الاسم بنقطة";
+    }
+
+    const isAllDots = username.split("").every(function(c) { return c === "."; });
+    if (isAllDots) {
+        return "لا يمكن أن يتكون الاسم من نقاط فقط";
+    }
+
+    const isAllSameChar = username.split("").every(function(c) { return c === username[0]; });
+    if (isAllSameChar) {
+        return "لا يمكن أن يتكون الاسم من حرف واحد مكرر";
+    }
+
+    return null;
+}
+
+document.getElementById("usernameSubmitBtn").addEventListener("click", function() {
+    const input = document.getElementById("usernameInput");
+    const errorEl = document.getElementById("usernameError");
+    const username = input.value.trim().toLowerCase();
+
+    errorEl.textContent = "";
+
+    const validationError = isValidUsername(username);
+    if (validationError) {
+        errorEl.textContent = validationError;
+        return;
+    }
+
+    window.firebaseCheckUsernameTaken(username).then(function(docSnap) {
+        if (docSnap.exists()) {
+            errorEl.textContent = "اسم المستخدم محجوز، جرّب اسمًا آخر";
+            return;
+        }
+
+        const user = window.firebaseCurrentUser();
+        window.firebaseSaveUsername(user.uid, username).then(function() {
+            document.getElementById("usernameScreen").style.display = "none";
+        }).catch(function(error) {
+            errorEl.textContent = "حدث خطأ، حاول مرة أخرى";
+            console.error(error);
+        });
+    });
+});
