@@ -200,6 +200,11 @@ function renderAchievements() {
 }
 
 function recordWin() {
+    const user = window.firebaseCurrentUser();
+    if (user) {
+        window.firebaseIncrementSolved(user.uid);
+    }
+
     clearInterval(timerInterval);
     playWinSound();
     const totalSolved = parseInt(localStorage.getItem("romanSudokuTotalSolved")) || 0;
