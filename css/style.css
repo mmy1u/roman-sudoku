@@ -527,3 +527,57 @@ h1 {
     resize: none;
     font-family: 'EB Garamond', serif;
 }
+#profileBtn {
+    margin-bottom: 15px;
+    padding: 8px 18px;
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+}
+
+#profileModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(43, 38, 32, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#profileContent {
+    background-color: var(--bg-color);
+    padding: 25px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 320px;
+    width: 85%;
+    font-family: 'EB Garamond', serif;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#profileContent h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--primary-dark);
+    margin: 0 0 10px 0;
+}
+
+.profile-label {
+    text-align: right;
+    font-size: 13px;
+    color: var(--primary-dark);
+    margin-top: 8px;
+}
+
+#profileContent textarea {
+    resize: none;
+    font-family: 'EB Garamond', serif;
+}
