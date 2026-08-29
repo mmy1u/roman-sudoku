@@ -736,4 +736,92 @@ document.getElementById("saveProfileBtn").addEventListener("click", function() {
 });
 
 populateCountrySelect();
+const countries = [
+    { code: "SA", name: "🇸🇦 السعودية" },
+    { code: "AE", name: "🇦🇪 الإمارات" },
+    { code: "EG", name: "🇪🇬 مصر" },
+    { code: "JO", name: "🇯🇴 الأردن" },
+    { code: "KW", name: "🇰🇼 الكويت" },
+    { code: "QA", name: "🇶🇦 قطر" },
+    { code: "BH", name: "🇧🇭 البحرين" },
+    { code: "OM", name: "🇴🇲 عُمان" },
+    { code: "IQ", name: "🇮🇶 العراق" },
+    { code: "SY", name: "🇸🇾 سوريا" },
+    { code: "LB", name: "🇱🇧 لبنان" },
+    { code: "PS", name: "🇵🇸 فلسطين" },
+    { code: "YE", name: "🇾🇪 اليمن" },
+    { code: "MA", name: "🇲🇦 المغرب" },
+    { code: "DZ", name: "🇩🇿 الجزائر" },
+    { code: "TN", name: "🇹🇳 تونس" },
+    { code: "LY", name: "🇱🇾 ليبيا" },
+    { code: "SD", name: "🇸🇩 السودان" },
+    { code: "US", name: "🇺🇸 الولايات المتحدة" },
+    { code: "GB", name: "🇬🇧 بريطانيا" },
+    { code: "FR", name: "🇫🇷 فرنسا" },
+    { code: "DE", name: "🇩🇪 ألمانيا" },
+    { code: "TR", name: "🇹🇷 تركيا" },
+    { code: "IN", name: "🇮🇳 الهند" },
+    { code: "PK", name: "🇵🇰 باكستان" },
+    { code: "OTHER", name: "🌍 دولة أخرى" }
+];
+
+function populateCountrySelect() {
+    const select = document.getElementById("countrySelect");
+    select.innerHTML = "";
+    countries.forEach(function(country) {
+        const option = document.createElement("option");
+        option.value = country.code;
+        option.textContent = country.name;
+        select.appendChild(option);
+    });
+}
+
+function openProfile() {
+    const user = window.firebaseCurrentUser();
+    if (!user) return;
+
+    window.firebaseGetPlayerProfile(user.uid).then(function(docSnap) {
+        const data = docSnap.exists() ? docSnap.data() : {};
+
+        document.getElementById("profileUsername").textContent = "👤 " + (data.username || "بدون اسم");
+
+        if (data.createdAt) {
+            const date = data.createdAt.toDate();
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            document.getElementById("profileJoinDate").textContent = "📅 عضو منذ: " + day + "/" + month + "/" + year;
+        }
+
+        document.getElementById("countrySelect").value = data.country || "SA";
+        document.getElementById("bioInput").value = data.bio || "";
+        document.getElementById("profileSaveMsg").textContent = "";
+        document.getElementById("profileModal").style.display = "flex";
+    });
+}
+
+document.getElementById("profileBtn").addEventListener("click", openProfile);
+
+document.getElementById("closeProfileBtn").addEventListener("click", function() {
+    document.getElementById("profileModal").style.display = "none";
+});
+
+document.getElementById("saveProfileBtn").addEventListener("click", function() {
+    const user = window.firebaseCurrentUser();
+    if (!user) return;
+
+    const country = document.getElementById("countrySelect").value;
+    const bio = document.getElementById("bioInput").value.trim();
+
+    window.firebaseSaveProfile(user.uid, { country: country, bio: bio })
+        .then(function() {
+            document.getElementById("profileSaveMsg").textContent = "✅ تم الحفظ بنجاح";
+        })
+        .catch(function(error) {
+            document.getElementById("profileSaveMsg").textContent = "حدث خطأ، حاول مرة أخرى";
+            console.error(error);
+        });
+});
+
+populateCountrySelect();
 startNewGame();
