@@ -177,6 +177,13 @@
             return auth.currentUser;
         };
 
+        window.firebaseIncrementSolved = function(uid) {
+            return getDoc(doc(db, "players", uid)).then(function(docSnap) {
+                const current = docSnap.exists() && docSnap.data().totalSolved ? docSnap.data().totalSolved : 0;
+                return setDoc(doc(db, "players", uid), { totalSolved: current + 1 }, { merge: true });
+            });
+        };
+
         onAuthStateChanged(auth, function(user) {
             if (user) {
                 document.getElementById("authScreen").style.display = "none";
