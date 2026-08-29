@@ -581,3 +581,30 @@ h1 {
     resize: none;
     font-family: 'EB Garamond', serif;
 }
+#avatarDisplay {
+    font-size: 50px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+#avatarGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.avatar-option {
+    font-size: 24px;
+    padding: 8px;
+    text-align: center;
+    background-color: var(--cell-bg);
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.avatar-option.selected {
+    border: 2px solid var(--gold);
+    background-color: var(--given-bg);
+}
