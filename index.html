@@ -233,6 +233,7 @@ function updateLastSeen(uid) {
 window.firebaseStartHeartbeat = startHeartbeat;
         if (user) {
             document.getElementById("authScreen").style.display = "none";
+          window.firebaseStartHeartbeat(user.uid);
             console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
 
             window.firebaseGetPlayerProfile(user.uid).then(function(docSnap) {
