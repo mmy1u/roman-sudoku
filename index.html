@@ -67,19 +67,34 @@
     </div>
 
     <div id="profileBtn">👤 ملفي</div>
-  <div id="requestsBtn">📨 الطلبات <span id="requestsCount"></span></div>
-<div id="requestsModal">
-    <div id="requestsContent">
-        <h2>الأصدقاء</h2>
-        <div id="requestsTabs">
-            <div id="tabRequests" class="tab-btn active">📨 الطلبات</div>
-            <div id="tabFriends" class="tab-btn">👥 أصدقائي</div>
+    <div id="requestsBtn">📨 الطلبات <span id="requestsCount"></span></div>
+    <div id="requestsModal">
+        <div id="requestsContent">
+            <h2>الأصدقاء</h2>
+            <div id="requestsTabs">
+                <div id="tabRequests" class="tab-btn active">📨 الطلبات</div>
+                <div id="tabFriends" class="tab-btn">👥 أصدقائي</div>
+            </div>
+            <div id="requestsList"></div>
+            <div id="friendsList" style="display: none;"></div>
+            <div id="closeRequestsBtn" class="auth-btn guest">إغلاق</div>
         </div>
-        <div id="requestsList"></div>
-        <div id="friendsList" style="display: none;"></div>
-        <div id="closeRequestsBtn" class="auth-btn guest">إغلاق</div>
     </div>
-</div>
+
+    <div id="chatModal">
+        <div id="chatContent">
+            <div id="chatHeader">
+                <span id="chatWithName"></span>
+                <span id="closeChatBtn">✕</span>
+            </div>
+            <div id="chatMessages"></div>
+            <div id="chatInputRow">
+                <input type="text" id="chatInput" placeholder="اكتب رسالة..." class="auth-input">
+                <div id="chatSendBtn">➤</div>
+            </div>
+        </div>
+    </div>
+
     <div id="searchBtn">🔎 بحث</div>
     <div id="searchModal">
         <div id="searchContent">
@@ -135,129 +150,147 @@
     </div>
     <div id="winMessage"></div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, orderBy, onSnapshot, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
-        authDomain: "roman-sudoku-32232.firebaseapp.com",
-        projectId: "roman-sudoku-32232",
-        storageBucket: "roman-sudoku-32232.firebasestorage.app",
-        messagingSenderId: "754569598290",
-        appId: "1:754569598290:web:74829f667670a6194ad68b"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvXa2ZggLmdT6PDTzwxAETOGfA-r08hC8",
+            authDomain: "roman-sudoku-32232.firebaseapp.com",
+            projectId: "roman-sudoku-32232",
+            storageBucket: "roman-sudoku-32232.firebasestorage.app",
+            messagingSenderId: "754569598290",
+            appId: "1:754569598290:web:74829f667670a6194ad68b"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const googleProvider = new GoogleAuthProvider();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
 
-    window.firebaseAuth = auth;
+        window.firebaseAuth = auth;
 
-    window.firebaseSignInAnonymously = function() { return signInAnonymously(auth); };
-    window.firebaseSignInWithGoogle = function() { return signInWithPopup(auth, googleProvider); };
-    window.firebaseSignUp = function(email, password) { return createUserWithEmailAndPassword(auth, email, password); };
-    window.firebaseSignIn = function(email, password) { return signInWithEmailAndPassword(auth, email, password); };
-    window.firebaseSignOut = function() { return signOut(auth); };
-    window.firebaseCreatePlayerProfile = function(uid, data) { return setDoc(doc(db, "players", uid), data); };
-    window.firebaseSaveProfile = function(uid, data) { return setDoc(doc(db, "players", uid), data, { merge: true }); };
-    window.firebaseGetPlayerProfile = function(uid) { return getDoc(doc(db, "players", uid)); };
-    window.firebaseCheckUsernameTaken = function(username) { return getDoc(doc(db, "usernames", username)); };
-    window.firebaseSaveUsername = function(uid, username) {
-        return setDoc(doc(db, "usernames", username), { uid: uid }).then(function() {
-            return setDoc(doc(db, "players", uid), { username: username }, { merge: true });
-        });
-    };
-    window.firebaseCurrentUser = function() { return auth.currentUser; };
-    window.firebaseIncrementSolved = function(uid) {
-        return getDoc(doc(db, "players", uid)).then(function(docSnap) {
-            const current = docSnap.exists() && docSnap.data().totalSolved ? docSnap.data().totalSolved : 0;
-            return setDoc(doc(db, "players", uid), { totalSolved: current + 1 }, { merge: true });
-        });
-    };
-    window.firebaseSearchPlayer = function(username) {
-        return getDoc(doc(db, "usernames", username)).then(function(usernameDoc) {
-            if (!usernameDoc.exists()) return null;
-            const uid = usernameDoc.data().uid;
-            return getDoc(doc(db, "players", uid)).then(function(playerDoc) {
-                return playerDoc.exists() ? { uid: uid, data: playerDoc.data() } : null;
+        window.firebaseSignInAnonymously = function() { return signInAnonymously(auth); };
+        window.firebaseSignInWithGoogle = function() { return signInWithPopup(auth, googleProvider); };
+        window.firebaseSignUp = function(email, password) { return createUserWithEmailAndPassword(auth, email, password); };
+        window.firebaseSignIn = function(email, password) { return signInWithEmailAndPassword(auth, email, password); };
+        window.firebaseSignOut = function() { return signOut(auth); };
+        window.firebaseCreatePlayerProfile = function(uid, data) { return setDoc(doc(db, "players", uid), data); };
+        window.firebaseSaveProfile = function(uid, data) { return setDoc(doc(db, "players", uid), data, { merge: true }); };
+        window.firebaseGetPlayerProfile = function(uid) { return getDoc(doc(db, "players", uid)); };
+        window.firebaseCheckUsernameTaken = function(username) { return getDoc(doc(db, "usernames", username)); };
+        window.firebaseSaveUsername = function(uid, username) {
+            return setDoc(doc(db, "usernames", username), { uid: uid }).then(function() {
+                return setDoc(doc(db, "players", uid), { username: username }, { merge: true });
             });
-        });
-    };
+        };
+        window.firebaseCurrentUser = function() { return auth.currentUser; };
+        window.firebaseIncrementSolved = function(uid) {
+            return getDoc(doc(db, "players", uid)).then(function(docSnap) {
+                const current = docSnap.exists() && docSnap.data().totalSolved ? docSnap.data().totalSolved : 0;
+                return setDoc(doc(db, "players", uid), { totalSolved: current + 1 }, { merge: true });
+            });
+        };
+        window.firebaseSearchPlayer = function(username) {
+            return getDoc(doc(db, "usernames", username)).then(function(usernameDoc) {
+                if (!usernameDoc.exists()) return null;
+                const uid = usernameDoc.data().uid;
+                return getDoc(doc(db, "players", uid)).then(function(playerDoc) {
+                    return playerDoc.exists() ? { uid: uid, data: playerDoc.data() } : null;
+                });
+            });
+        };
 
-    window.firebaseSendFriendRequest = function(fromUid, toUid) {
-        const requestId = fromUid + "_" + toUid;
-        return setDoc(doc(db, "friendRequests", requestId), {
-            from: fromUid,
-            to: toUid,
-            status: "pending",
-            createdAt: serverTimestamp()
-        });
-    };
+        window.firebaseSendFriendRequest = function(fromUid, toUid) {
+            const requestId = fromUid + "_" + toUid;
+            return setDoc(doc(db, "friendRequests", requestId), {
+                from: fromUid,
+                to: toUid,
+                status: "pending",
+                createdAt: serverTimestamp()
+            });
+        };
 
-    window.firebaseGetFriendRequests = function(myUid) {
-        const q = query(collection(db, "friendRequests"), where("to", "==", myUid), where("status", "==", "pending"));
-        return getDocs(q);
-    };
+        window.firebaseGetFriendRequests = function(myUid) {
+            const q = query(collection(db, "friendRequests"), where("to", "==", myUid), where("status", "==", "pending"));
+            return getDocs(q);
+        };
 
-    window.firebaseRespondToRequest = function(requestId, accept) {
-        if (accept) {
-            return setDoc(doc(db, "friendRequests", requestId), { status: "accepted" }, { merge: true });
-        } else {
-            return deleteDoc(doc(db, "friendRequests", requestId));
+        window.firebaseRespondToRequest = function(requestId, accept) {
+            if (accept) {
+                return setDoc(doc(db, "friendRequests", requestId), { status: "accepted" }, { merge: true });
+            } else {
+                return deleteDoc(doc(db, "friendRequests", requestId));
+            }
+        };
+
+        window.firebaseGetFriends = function(myUid) {
+            const q1 = query(collection(db, "friendRequests"), where("from", "==", myUid), where("status", "==", "accepted"));
+            const q2 = query(collection(db, "friendRequests"), where("to", "==", myUid), where("status", "==", "accepted"));
+            return Promise.all([getDocs(q1), getDocs(q2)]);
+        };
+
+        window.firebaseGetChatId = function(uid1, uid2) {
+            return uid1 < uid2 ? uid1 + "_" + uid2 : uid2 + "_" + uid1;
+        };
+
+        window.firebaseSendMessage = function(chatId, senderUid, text) {
+            return addDoc(collection(db, "chats", chatId, "messages"), {
+                sender: senderUid,
+                text: text,
+                createdAt: serverTimestamp()
+            });
+        };
+
+        window.firebaseListenToChat = function(chatId, callback) {
+            const q = query(collection(db, "chats", chatId, "messages"), orderBy("createdAt", "asc"));
+            return onSnapshot(q, callback);
+        };
+
+        let heartbeatInterval;
+
+        function startHeartbeat(uid) {
+            updateLastSeen(uid);
+            heartbeatInterval = setInterval(function() {
+                updateLastSeen(uid);
+            }, 30000);
         }
-    };
 
-    window.firebaseGetFriends = function(myUid) {
-        const q1 = query(collection(db, "friendRequests"), where("from", "==", myUid), where("status", "==", "accepted"));
-        const q2 = query(collection(db, "friendRequests"), where("to", "==", myUid), where("status", "==", "accepted"));
-        return Promise.all([getDocs(q1), getDocs(q2)]);
-    };
+        function updateLastSeen(uid) {
+            setDoc(doc(db, "players", uid), { lastSeen: serverTimestamp() }, { merge: true });
+        }
 
-    onAuthStateChanged(auth, function(user) {
-      let heartbeatInterval;
+        window.firebaseStartHeartbeat = startHeartbeat;
 
-function startHeartbeat(uid) {
-    updateLastSeen(uid);
-    heartbeatInterval = setInterval(function() {
-        updateLastSeen(uid);
-    }, 30000);
-}
+        onAuthStateChanged(auth, function(user) {
+            if (user) {
+                document.getElementById("authScreen").style.display = "none";
+                console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
+                window.firebaseStartHeartbeat(user.uid);
 
-function updateLastSeen(uid) {
-    setDoc(doc(db, "players", uid), { lastSeen: serverTimestamp() }, { merge: true });
-}
-
-window.firebaseStartHeartbeat = startHeartbeat;
-        if (user) {
-            document.getElementById("authScreen").style.display = "none";
-          window.firebaseStartHeartbeat(user.uid);
-            console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
-
-            window.firebaseGetPlayerProfile(user.uid).then(function(docSnap) {
-                if (!docSnap.exists()) {
-                    window.firebaseCreatePlayerProfile(user.uid, {
-                        email: user.email || null,
-                        isAnonymous: user.isAnonymous,
-                        createdAt: serverTimestamp()
-                    }).then(function() {
-                        document.getElementById("usernameScreen").style.display = "flex";
-                    });
-                } else {
-                    if (!docSnap.data().username) {
-                        document.getElementById("usernameScreen").style.display = "flex";
+                window.firebaseGetPlayerProfile(user.uid).then(function(docSnap) {
+                    if (!docSnap.exists()) {
+                        window.firebaseCreatePlayerProfile(user.uid, {
+                            email: user.email || null,
+                            isAnonymous: user.isAnonymous,
+                            createdAt: serverTimestamp()
+                        }).then(function() {
+                            document.getElementById("usernameScreen").style.display = "flex";
+                        });
                     } else {
-                        document.getElementById("usernameScreen").style.display = "none";
+                        if (!docSnap.data().username) {
+                            document.getElementById("usernameScreen").style.display = "flex";
+                        } else {
+                            document.getElementById("usernameScreen").style.display = "none";
+                        }
                     }
-                }
-            });
-        } else {
-            document.getElementById("authScreen").style.display = "flex";
-        }
-    });
-</script>
+                });
+            } else {
+                document.getElementById("authScreen").style.display = "flex";
+            }
+        });
+    </script>
 
     <script src="js/sudoku-logic.js"></script>
     <script src="js/audio.js"></script>
