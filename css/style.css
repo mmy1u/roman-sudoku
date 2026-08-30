@@ -762,3 +762,45 @@ h1 {
     font-size: 14px;
     text-align: center;
 }
+#requestsTabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px;
+    background-color: var(--cell-bg);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: center;
+    color: var(--ink);
+}
+
+.tab-btn.active {
+    background-color: var(--gold);
+    color: var(--ink);
+    font-weight: bold;
+}
+
+.friend-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--given-bg);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    text-align: right;
+}
+
+.friend-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #4caf50;
+    display: inline-block;
+    margin-left: 4px;
+}
