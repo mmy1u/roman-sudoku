@@ -512,6 +512,119 @@ function openProfile() {
     });
 }
 
+const countryNames = {};
+countries.forEach(function(c) { countryNames[c.code] = c.name; });
+
+function isOnline(lastSeenTimestamp) {
+    if (!lastSeenTimestamp) return false;
+    const lastSeenDate = lastSeenTimestamp.toDate();
+    const now = new Date();
+    const diffSeconds = (now - lastSeenDate) / 1000;
+    return diffSeconds < 60;
+}
+
+function loadFriendRequests() {
+    const user = window.firebaseCurrentUser();
+    if (!user) return;
+
+    window.firebaseGetFriendRequests(user.uid).then(function(snapshot) {
+        const listEl = document.getElementById("requestsList");
+        const countEl = document.getElementById("requestsCount");
+        listEl.innerHTML = "";
+
+        if (snapshot.empty) {
+            listEl.innerHTML = "<p class='auth-hint'>لا توجد طلبات حالياً</p>";
+            countEl.textContent = "";
+            return;
+        }
+
+        countEl.textContent = "(" + snapshot.size + ")";
+
+        const promises = [];
+        snapshot.forEach(function(requestDoc) {
+            const requestData = requestDoc.data();
+            const requestId = requestDoc.id;
+
+            const promise = window.firebaseGetPlayerProfile(requestData.from).then(function(playerDoc) {
+                const playerData = playerDoc.exists() ? playerDoc.data() : {};
+                const avatar = playerData.avatar || "🧙";
+                const username = playerData.username || "لاعب";
+
+                const card = document.createElement("div");
+                card.classList.add("request-card");
+                card.innerHTML =
+                    "<span>" + avatar + " " + username + "</span>" +
+                    "<div class='request-actions'>" +
+                        "<div class='request-accept' data-id='" + requestId + "'>✓ قبول</div>" +
+                        "<div class='request-reject' data-id='" + requestId + "'>✕ رفض</div>" +
+                    "</div>";
+                listEl.appendChild(card);
+            });
+            promises.push(promise);
+        });
+
+        Promise.all(promises).then(function() {
+            document.querySelectorAll(".request-accept").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    window.firebaseRespondToRequest(btn.dataset.id, true).then(loadFriendRequests);
+                });
+            });
+            document.querySelectorAll(".request-reject").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    window.firebaseRespondToRequest(btn.dataset.id, false).then(loadFriendRequests);
+                });
+            });
+        });
+    });
+}
+
+function loadFriendsList() {
+    const user = window.firebaseCurrentUser();
+    if (!user) return;
+
+    const listEl = document.getElementById("friendsList");
+    listEl.innerHTML = "<p class='auth-hint'>جاري التحميل...</p>";
+
+    window.firebaseGetFriends(user.uid).then(function(results) {
+        const sentAccepted = results[0];
+        const receivedAccepted = results[1];
+
+        const friendUids = [];
+
+        sentAccepted.forEach(function(docSnap) {
+            friendUids.push(docSnap.data().to);
+        });
+        receivedAccepted.forEach(function(docSnap) {
+            friendUids.push(docSnap.data().from);
+        });
+
+        if (friendUids.length === 0) {
+            listEl.innerHTML = "<p class='auth-hint'>لا يوجد أصدقاء بعد</p>";
+            return;
+        }
+
+        listEl.innerHTML = "";
+
+        friendUids.forEach(function(friendUid) {
+            window.firebaseGetPlayerProfile(friendUid).then(function(playerDoc) {
+                const data = playerDoc.exists() ? playerDoc.data() : {};
+                const avatar = data.avatar || "🧙";
+                const username = data.username || "لاعب";
+                const countryLabel = countryNames[data.country] || "🌍";
+                const onlineDot = isOnline(data.lastSeen) ? "🟢 " : "";
+
+                const card = document.createElement("div");
+                card.classList.add("friend-card");
+                card.innerHTML =
+                    "<span>" + avatar + "</span>" +
+                    "<div><div class='player-card-username'>" + username + "</div>" +
+                    "<div class='player-card-details'>" + onlineDot + countryLabel + "</div></div>";
+                listEl.appendChild(card);
+            });
+        });
+    });
+}
+
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 const board = document.getElementById("board");
 const numberPad = document.getElementById("numberPad");
@@ -757,24 +870,6 @@ document.getElementById("saveProfileBtn").addEventListener("click", function() {
         });
 });
 
-populateCountrySelect();
-populateAvatarGrid();
-
-const difficultyButtons = document.querySelectorAll(".diff-btn");
-difficultyButtons.forEach(function(btn) {
-    if (btn.dataset.level === currentDifficulty) {
-        btn.classList.add("active");
-    }
-    btn.addEventListener("click", function() {
-        difficultyButtons.forEach(function(b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        currentDifficulty = btn.dataset.level;
-        startNewGame();
-    });
-});
-const countryNames = {};
-countries.forEach(function(c) { countryNames[c.code] = c.name; });
-
 document.getElementById("searchBtn").addEventListener("click", function() {
     document.getElementById("searchInput").value = "";
     document.getElementById("searchResult").innerHTML = "";
@@ -806,10 +901,9 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
         const targetUid = result.uid;
         const avatar = playerData.avatar || "🧙";
         const countryLabel = countryNames[playerData.country] || "🌍";
-      const onlineDot = isOnline(data.lastSeen) ? "🟢 " : "";
         const bio = playerData.bio || "بدون نبذة";
         const solved = playerData.totalSolved || 0;
-      const onlineDot = isOnline(playerData.lastSeen) ? "🟢 " : "";
+        const onlineDot = isOnline(playerData.lastSeen) ? "🟢 " : "";
         const myUid = window.firebaseCurrentUser().uid;
 
         let addFriendButton = "";
@@ -838,60 +932,6 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
         }
     });
 });
-function loadFriendRequests() {
-    const user = window.firebaseCurrentUser();
-    if (!user) return;
-
-    window.firebaseGetFriendRequests(user.uid).then(function(snapshot) {
-        const listEl = document.getElementById("requestsList");
-        const countEl = document.getElementById("requestsCount");
-        listEl.innerHTML = "";
-
-        if (snapshot.empty) {
-            listEl.innerHTML = "<p class='auth-hint'>لا توجد طلبات حالياً</p>";
-            countEl.textContent = "";
-            return;
-        }
-
-        countEl.textContent = "(" + snapshot.size + ")";
-
-        const promises = [];
-        snapshot.forEach(function(requestDoc) {
-            const requestData = requestDoc.data();
-            const requestId = requestDoc.id;
-
-            const promise = window.firebaseGetPlayerProfile(requestData.from).then(function(playerDoc) {
-                const playerData = playerDoc.exists() ? playerDoc.data() : {};
-                const avatar = playerData.avatar || "🧙";
-                const username = playerData.username || "لاعب";
-
-                const card = document.createElement("div");
-                card.classList.add("request-card");
-                card.innerHTML =
-                    "<span>" + avatar + " " + username + "</span>" +
-                    "<div class='request-actions'>" +
-                        "<div class='request-accept' data-id='" + requestId + "'>✓ قبول</div>" +
-                        "<div class='request-reject' data-id='" + requestId + "'>✕ رفض</div>" +
-                    "</div>";
-                listEl.appendChild(card);
-            });
-            promises.push(promise);
-        });
-
-        Promise.all(promises).then(function() {
-            document.querySelectorAll(".request-accept").forEach(function(btn) {
-                btn.addEventListener("click", function() {
-                    window.firebaseRespondToRequest(btn.dataset.id, true).then(loadFriendRequests);
-                });
-            });
-            document.querySelectorAll(".request-reject").forEach(function(btn) {
-                btn.addEventListener("click", function() {
-                    window.firebaseRespondToRequest(btn.dataset.id, false).then(loadFriendRequests);
-                });
-            });
-        });
-    });
-}
 
 document.getElementById("requestsBtn").addEventListener("click", function() {
     loadFriendRequests();
@@ -901,51 +941,6 @@ document.getElementById("requestsBtn").addEventListener("click", function() {
 document.getElementById("closeRequestsBtn").addEventListener("click", function() {
     document.getElementById("requestsModal").style.display = "none";
 });
-function loadFriendsList() {
-    const user = window.firebaseCurrentUser();
-    if (!user) return;
-
-    const listEl = document.getElementById("friendsList");
-    listEl.innerHTML = "<p class='auth-hint'>جاري التحميل...</p>";
-
-    window.firebaseGetFriends(user.uid).then(function(results) {
-        const sentAccepted = results[0];
-        const receivedAccepted = results[1];
-
-        const friendUids = [];
-
-        sentAccepted.forEach(function(docSnap) {
-            friendUids.push(docSnap.data().to);
-        });
-        receivedAccepted.forEach(function(docSnap) {
-            friendUids.push(docSnap.data().from);
-        });
-
-        if (friendUids.length === 0) {
-            listEl.innerHTML = "<p class='auth-hint'>لا يوجد أصدقاء بعد</p>";
-            return;
-        }
-
-        listEl.innerHTML = "";
-
-        friendUids.forEach(function(friendUid) {
-            window.firebaseGetPlayerProfile(friendUid).then(function(playerDoc) {
-                const data = playerDoc.exists() ? playerDoc.data() : {};
-                const avatar = data.avatar || "🧙";
-                const username = data.username || "لاعب";
-                const countryLabel = countryNames[data.country] || "🌍";
-
-                const card = document.createElement("div");
-                card.classList.add("friend-card");
-                card.innerHTML =
-                    "<span>" + avatar + "</span>" +
-                    "<div><div class='player-card-username'>" + username + "</div>" +
-                    "<div class='player-card-details'>" + countryLabel + "</div></div>";
-                listEl.appendChild(card);
-            });
-        });
-    });
-}
 
 document.getElementById("tabRequests").addEventListener("click", function() {
     document.getElementById("tabRequests").classList.add("active");
@@ -961,11 +956,21 @@ document.getElementById("tabFriends").addEventListener("click", function() {
     document.getElementById("requestsList").style.display = "none";
     loadFriendsList();
 });
-function isOnline(lastSeenTimestamp) {
-    if (!lastSeenTimestamp) return false;
-    const lastSeenDate = lastSeenTimestamp.toDate();
-    const now = new Date();
-    const diffSeconds = (now - lastSeenDate) / 1000;
-    return diffSeconds < 60;
-}
+
+populateCountrySelect();
+populateAvatarGrid();
+
+const difficultyButtons = document.querySelectorAll(".diff-btn");
+difficultyButtons.forEach(function(btn) {
+    if (btn.dataset.level === currentDifficulty) {
+        btn.classList.add("active");
+    }
+    btn.addEventListener("click", function() {
+        difficultyButtons.forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        currentDifficulty = btn.dataset.level;
+        startNewGame();
+    });
+});
+
 startNewGame();
