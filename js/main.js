@@ -808,6 +808,7 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
         const countryLabel = countryNames[playerData.country] || "🌍";
         const bio = playerData.bio || "بدون نبذة";
         const solved = playerData.totalSolved || 0;
+      const onlineDot = isOnline(playerData.lastSeen) ? "🟢 " : "";
         const myUid = window.firebaseCurrentUser().uid;
 
         let addFriendButton = "";
