@@ -959,4 +959,11 @@ document.getElementById("tabFriends").addEventListener("click", function() {
     document.getElementById("requestsList").style.display = "none";
     loadFriendsList();
 });
+function isOnline(lastSeenTimestamp) {
+    if (!lastSeenTimestamp) return false;
+    const lastSeenDate = lastSeenTimestamp.toDate();
+    const now = new Date();
+    const diffSeconds = (now - lastSeenDate) / 1000;
+    return diffSeconds < 60;
+}
 startNewGame();
