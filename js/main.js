@@ -818,4 +818,68 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
             '</div>';
     });
 });
+function loadFriendRequests() {
+    const user = window.firebaseCurrentUser();
+    if (!user) return;
+
+    window.firebaseGetFriendRequests(user.uid).then(function(snapshot) {
+        const listEl = document.getElementById("requestsList");
+        const countEl = document.getElementById("requestsCount");
+        listEl.innerHTML = "";
+
+        if (snapshot.empty) {
+            listEl.innerHTML = "<p class='auth-hint'>لا توجد طلبات حالياً</p>";
+            countEl.textContent = "";
+            return;
+        }
+
+        countEl.textContent = "(" + snapshot.size + ")";
+
+        const promises = [];
+        snapshot.forEach(function(requestDoc) {
+            const requestData = requestDoc.data();
+            const requestId = requestDoc.id;
+
+            const promise = window.firebaseGetPlayerProfile(requestData.from).then(function(playerDoc) {
+                const playerData = playerDoc.exists() ? playerDoc.data() : {};
+                const avatar = playerData.avatar || "🧙";
+                const username = playerData.username || "لاعب";
+
+                const card = document.createElement("div");
+                card.classList.add("request-card");
+                card.innerHTML =
+                    "<span>" + avatar + " " + username + "</span>" +
+                    "<div class='request-actions'>" +
+                        "<div class='request-accept' data-id='" + requestId + "'>✓ قبول</div>" +
+                        "<div class='request-reject' data-id='" + requestId + "'>✕ رفض</div>" +
+                    "</div>";
+                listEl.appendChild(card);
+            });
+            promises.push(promise);
+        });
+
+        Promise.all(promises).then(function() {
+            document.querySelectorAll(".request-accept").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    window.firebaseRespondToRequest(btn.dataset.id, true).then(loadFriendRequests);
+                });
+            });
+            document.querySelectorAll(".request-reject").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    window.firebaseRespondToRequest(btn.dataset.id, false).then(loadFriendRequests);
+                });
+            });
+        });
+    });
+}
+
+document.getElementById("requestsBtn").addEventListener("click", function() {
+    loadFriendRequests();
+    document.getElementById("requestsModal").style.display = "flex";
+});
+
+document.getElementById("closeRequestsBtn").addEventListener("click", function() {
+    document.getElementById("requestsModal").style.display = "none";
+});
+
 startNewGame();
