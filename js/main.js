@@ -806,6 +806,7 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
         const targetUid = result.uid;
         const avatar = playerData.avatar || "🧙";
         const countryLabel = countryNames[playerData.country] || "🌍";
+      const onlineDot = isOnline(data.lastSeen) ? "🟢 " : "";
         const bio = playerData.bio || "بدون نبذة";
         const solved = playerData.totalSolved || 0;
       const onlineDot = isOnline(playerData.lastSeen) ? "🟢 " : "";
