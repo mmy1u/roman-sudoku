@@ -899,5 +899,64 @@ document.getElementById("requestsBtn").addEventListener("click", function() {
 document.getElementById("closeRequestsBtn").addEventListener("click", function() {
     document.getElementById("requestsModal").style.display = "none";
 });
+function loadFriendsList() {
+    const user = window.firebaseCurrentUser();
+    if (!user) return;
 
+    const listEl = document.getElementById("friendsList");
+    listEl.innerHTML = "<p class='auth-hint'>جاري التحميل...</p>";
+
+    window.firebaseGetFriends(user.uid).then(function(results) {
+        const sentAccepted = results[0];
+        const receivedAccepted = results[1];
+
+        const friendUids = [];
+
+        sentAccepted.forEach(function(docSnap) {
+            friendUids.push(docSnap.data().to);
+        });
+        receivedAccepted.forEach(function(docSnap) {
+            friendUids.push(docSnap.data().from);
+        });
+
+        if (friendUids.length === 0) {
+            listEl.innerHTML = "<p class='auth-hint'>لا يوجد أصدقاء بعد</p>";
+            return;
+        }
+
+        listEl.innerHTML = "";
+
+        friendUids.forEach(function(friendUid) {
+            window.firebaseGetPlayerProfile(friendUid).then(function(playerDoc) {
+                const data = playerDoc.exists() ? playerDoc.data() : {};
+                const avatar = data.avatar || "🧙";
+                const username = data.username || "لاعب";
+                const countryLabel = countryNames[data.country] || "🌍";
+
+                const card = document.createElement("div");
+                card.classList.add("friend-card");
+                card.innerHTML =
+                    "<span>" + avatar + "</span>" +
+                    "<div><div class='player-card-username'>" + username + "</div>" +
+                    "<div class='player-card-details'>" + countryLabel + "</div></div>";
+                listEl.appendChild(card);
+            });
+        });
+    });
+}
+
+document.getElementById("tabRequests").addEventListener("click", function() {
+    document.getElementById("tabRequests").classList.add("active");
+    document.getElementById("tabFriends").classList.remove("active");
+    document.getElementById("requestsList").style.display = "block";
+    document.getElementById("friendsList").style.display = "none";
+});
+
+document.getElementById("tabFriends").addEventListener("click", function() {
+    document.getElementById("tabFriends").classList.add("active");
+    document.getElementById("tabRequests").classList.remove("active");
+    document.getElementById("friendsList").style.display = "block";
+    document.getElementById("requestsList").style.display = "none";
+    loadFriendsList();
+});
 startNewGame();
