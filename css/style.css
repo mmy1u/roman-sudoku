@@ -804,3 +804,91 @@ h1 {
     display: inline-block;
     margin-left: 4px;
 }
+#chatModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(43, 38, 32, 0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 150;
+}
+
+#chatContent {
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 340px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#chatHeader {
+    background-color: var(--primary-dark);
+    color: var(--bg-color);
+    padding: 12px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Cinzel', serif;
+}
+
+#closeChatBtn {
+    cursor: pointer;
+}
+
+#chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.msg-bubble {
+    max-width: 75%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.msg-mine {
+    align-self: flex-start;
+    background-color: var(--gold);
+    color: var(--ink);
+}
+
+.msg-theirs {
+    align-self: flex-end;
+    background-color: var(--given-bg);
+    color: var(--ink);
+}
+
+#chatInputRow {
+    display: flex;
+    gap: 6px;
+    padding: 10px;
+    border-top: 1px solid var(--given-bg);
+}
+
+#chatInputRow .auth-input {
+    flex: 1;
+    padding: 8px;
+}
+
+#chatSendBtn {
+    background-color: var(--gold);
+    color: var(--ink);
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    cursor: pointer;
+}
