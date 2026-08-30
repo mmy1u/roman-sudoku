@@ -217,6 +217,20 @@
     };
 
     onAuthStateChanged(auth, function(user) {
+      let heartbeatInterval;
+
+function startHeartbeat(uid) {
+    updateLastSeen(uid);
+    heartbeatInterval = setInterval(function() {
+        updateLastSeen(uid);
+    }, 30000);
+}
+
+function updateLastSeen(uid) {
+    setDoc(doc(db, "players", uid), { lastSeen: serverTimestamp() }, { merge: true });
+}
+
+window.firebaseStartHeartbeat = startHeartbeat;
         if (user) {
             document.getElementById("authScreen").style.display = "none";
             console.log("Logged in as:", user.uid, "Anonymous:", user.isAnonymous);
