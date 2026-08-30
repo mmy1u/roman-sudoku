@@ -821,7 +821,7 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
                 '<div class="player-card-avatar">' + avatar + '</div>' +
                 '<div class="player-card-info">' +
                     '<div class="player-card-username">' + playerData.username + '</div>' +
-                    '<div class="player-card-details">' + countryLabel + ' | 🧩 ' + solved + ' لغز محلول</div>' +
+                    '<div class="player-card-details">' + onlineDot + countryLabel + ' | 🧩 ' + solved + ' لغز محلول</div>' +
                     '<div class="player-card-details">' + bio + '</div>' +
                 '</div>' +
             '</div>' + addFriendButton;
