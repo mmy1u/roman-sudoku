@@ -796,16 +796,24 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
 
     resultEl.innerHTML = "<p class='auth-hint'>جاري البحث...</p>";
 
-    window.firebaseSearchPlayer(username).then(function(playerData) {
-        if (playerData === null) {
+    window.firebaseSearchPlayer(username).then(function(result) {
+        if (result === null) {
             resultEl.innerHTML = "<p class='auth-error'>لا يوجد لاعب بهذا الاسم</p>";
             return;
         }
 
+        const playerData = result.data;
+        const targetUid = result.uid;
         const avatar = playerData.avatar || "🧙";
         const countryLabel = countryNames[playerData.country] || "🌍";
         const bio = playerData.bio || "بدون نبذة";
         const solved = playerData.totalSolved || 0;
+        const myUid = window.firebaseCurrentUser().uid;
+
+        let addFriendButton = "";
+        if (targetUid !== myUid) {
+            addFriendButton = "<div class='add-friend-btn' id='addFriendActionBtn'>➕ إضافة صديق</div>";
+        }
 
         resultEl.innerHTML =
             '<div class="player-card">' +
@@ -815,7 +823,17 @@ document.getElementById("searchSubmitBtn").addEventListener("click", function() 
                     '<div class="player-card-details">' + countryLabel + ' | 🧩 ' + solved + ' لغز محلول</div>' +
                     '<div class="player-card-details">' + bio + '</div>' +
                 '</div>' +
-            '</div>';
+            '</div>' + addFriendButton;
+
+        const addBtn = document.getElementById("addFriendActionBtn");
+        if (addBtn) {
+            addBtn.addEventListener("click", function() {
+                window.firebaseSendFriendRequest(myUid, targetUid).then(function() {
+                    addBtn.textContent = "✅ تم الإرسال";
+                    addBtn.style.pointerEvents = "none";
+                });
+            });
+        }
     });
 });
 function loadFriendRequests() {
