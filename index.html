@@ -66,26 +66,25 @@
         </div>
     </div>
 
-   <div id="profileBtn">👤 ملفي</div>
-<div id="searchBtn">🔎 بحث</div>
-<div id="searchModal">
-    <div id="searchContent">
-        <h2>بحث عن لاعب</h2>
-        <input type="text" id="searchInput" placeholder="اكتب اسم المستخدم" class="auth-input">
-        <div id="searchSubmitBtn" class="auth-btn">بحث</div>
-        <div id="searchResult"></div>
-        <div id="closeSearchBtn" class="auth-btn guest">إغلاق</div>
+    <div id="profileBtn">👤 ملفي</div>
+    <div id="searchBtn">🔎 بحث</div>
+    <div id="searchModal">
+        <div id="searchContent">
+            <h2>بحث عن لاعب</h2>
+            <input type="text" id="searchInput" placeholder="اكتب اسم المستخدم" class="auth-input">
+            <div id="searchSubmitBtn" class="auth-btn">بحث</div>
+            <div id="searchResult"></div>
+            <div id="closeSearchBtn" class="auth-btn guest">إغلاق</div>
+        </div>
     </div>
-</div>
-<div id="profileModal">
-    ...
+    <div id="profileModal">
         <div id="profileContent">
             <h2>الملف الشخصي</h2>
             <p id="profileUsername"></p>
             <p id="profileJoinDate"></p>
-<div id="avatarDisplay">🧙</div>
-<label class="profile-label">اختر أفاتار</label>
-<div id="avatarGrid"></div>
+            <div id="avatarDisplay">🧙</div>
+            <label class="profile-label">اختر أفاتار</label>
+            <div id="avatarGrid"></div>
             <label class="profile-label">الدولة</label>
             <select id="countrySelect" class="auth-input"></select>
 
@@ -194,6 +193,18 @@
             return getDoc(doc(db, "players", uid)).then(function(docSnap) {
                 const current = docSnap.exists() && docSnap.data().totalSolved ? docSnap.data().totalSolved : 0;
                 return setDoc(doc(db, "players", uid), { totalSolved: current + 1 }, { merge: true });
+            });
+        };
+
+        window.firebaseSearchPlayer = function(username) {
+            return getDoc(doc(db, "usernames", username)).then(function(usernameDoc) {
+                if (!usernameDoc.exists()) {
+                    return null;
+                }
+                const uid = usernameDoc.data().uid;
+                return getDoc(doc(db, "players", uid)).then(function(playerDoc) {
+                    return playerDoc.exists() ? playerDoc.data() : null;
+                });
             });
         };
 
