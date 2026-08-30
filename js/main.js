@@ -772,5 +772,50 @@ difficultyButtons.forEach(function(btn) {
         startNewGame();
     });
 });
+const countryNames = {};
+countries.forEach(function(c) { countryNames[c.code] = c.name; });
 
+document.getElementById("searchBtn").addEventListener("click", function() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("searchResult").innerHTML = "";
+    document.getElementById("searchModal").style.display = "flex";
+});
+
+document.getElementById("closeSearchBtn").addEventListener("click", function() {
+    document.getElementById("searchModal").style.display = "none";
+});
+
+document.getElementById("searchSubmitBtn").addEventListener("click", function() {
+    const username = document.getElementById("searchInput").value.trim().toLowerCase();
+    const resultEl = document.getElementById("searchResult");
+
+    if (username === "") {
+        resultEl.innerHTML = "<p class='auth-error'>اكتب اسمًا للبحث</p>";
+        return;
+    }
+
+    resultEl.innerHTML = "<p class='auth-hint'>جاري البحث...</p>";
+
+    window.firebaseSearchPlayer(username).then(function(playerData) {
+        if (playerData === null) {
+            resultEl.innerHTML = "<p class='auth-error'>لا يوجد لاعب بهذا الاسم</p>";
+            return;
+        }
+
+        const avatar = playerData.avatar || "🧙";
+        const countryLabel = countryNames[playerData.country] || "🌍";
+        const bio = playerData.bio || "بدون نبذة";
+        const solved = playerData.totalSolved || 0;
+
+        resultEl.innerHTML =
+            '<div class="player-card">' +
+                '<div class="player-card-avatar">' + avatar + '</div>' +
+                '<div class="player-card-info">' +
+                    '<div class="player-card-username">' + playerData.username + '</div>' +
+                    '<div class="player-card-details">' + countryLabel + ' | 🧩 ' + solved + ' لغز محلول</div>' +
+                    '<div class="player-card-details">' + bio + '</div>' +
+                '</div>' +
+            '</div>';
+    });
+});
 startNewGame();
