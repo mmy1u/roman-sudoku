@@ -578,6 +578,59 @@ function loadFriendRequests() {
     });
 }
 
+let currentChatId = null;
+let currentChatUnsubscribe = null;
+
+function openChatWith(friendUid, friendName) {
+    const myUid = window.firebaseCurrentUser().uid;
+    currentChatId = window.firebaseGetChatId(myUid, friendUid);
+
+    document.getElementById("chatWithName").textContent = "💬 " + friendName;
+    document.getElementById("chatMessages").innerHTML = "";
+    document.getElementById("chatModal").style.display = "flex";
+
+    if (currentChatUnsubscribe) {
+        currentChatUnsubscribe();
+    }
+
+    currentChatUnsubscribe = window.firebaseListenToChat(currentChatId, function(snapshot) {
+        const messagesEl = document.getElementById("chatMessages");
+        messagesEl.innerHTML = "";
+
+        snapshot.forEach(function(msgDoc) {
+            const msgData = msgDoc.data();
+            const isMine = msgData.sender === myUid;
+
+            const bubble = document.createElement("div");
+            bubble.classList.add("msg-bubble");
+            bubble.classList.add(isMine ? "msg-mine" : "msg-theirs");
+            bubble.textContent = msgData.text;
+            messagesEl.appendChild(bubble);
+        });
+
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
+}
+
+document.getElementById("closeChatBtn").addEventListener("click", function() {
+    document.getElementById("chatModal").style.display = "none";
+    if (currentChatUnsubscribe) {
+        currentChatUnsubscribe();
+        currentChatUnsubscribe = null;
+    }
+});
+
+document.getElementById("chatSendBtn").addEventListener("click", function() {
+    const input = document.getElementById("chatInput");
+    const text = input.value.trim();
+
+    if (text === "" || currentChatId === null) return;
+
+    const myUid = window.firebaseCurrentUser().uid;
+    window.firebaseSendMessage(currentChatId, myUid, text);
+    input.value = "";
+});
+
 function loadFriendsList() {
     const user = window.firebaseCurrentUser();
     if (!user) return;
@@ -617,9 +670,14 @@ function loadFriendsList() {
                 card.classList.add("friend-card");
                 card.innerHTML =
                     "<span>" + avatar + "</span>" +
-                    "<div><div class='player-card-username'>" + username + "</div>" +
-                    "<div class='player-card-details'>" + onlineDot + countryLabel + "</div></div>";
+                    "<div style='flex:1;'><div class='player-card-username'>" + username + "</div>" +
+                    "<div class='player-card-details'>" + onlineDot + countryLabel + "</div></div>" +
+                    "<div class='request-accept' data-chat-uid='" + friendUid + "' data-chat-name='" + username + "'>💬</div>";
                 listEl.appendChild(card);
+
+                card.querySelector("[data-chat-uid]").addEventListener("click", function(e) {
+                    openChatWith(e.target.dataset.chatUid, e.target.dataset.chatName);
+                });
             });
         });
     });
